@@ -1,1447 +1,1243 @@
-import React, { useState } from 'react';
-import { ChevronDown, MapPin, Calendar, DollarSign, Package, AlertCircle } from 'lucide-react';
-
-const VictoriaUSATrip = () => {
-  const [activeDay, setActiveDay] = useState(null);
-  const [activeSection, setActiveSection] = useState('overview');
-  const [language, setLanguage] = useState('zh'); // 'zh' or 'en'
-
-  // 雙語翻譯
-  const t = {
-    overview: { zh: '總覽', en: 'Overview' },
-    itinerary: { zh: '行程', en: 'Itinerary' },
-    checklist: { zh: '檢查清單', en: 'Checklist' },
-    financesTab: { zh: '預算', en: 'Budget' },
-    tripOverview: { zh: '✨ 旅程概覽', en: '✨ Trip Overview' },
-    tripDuration: { zh: '旅程時長', en: 'Trip Duration' },
-    days: { zh: '天', en: 'days' },
-    nights: { zh: '夜', en: 'nights' },
-    companion: { zh: '旅伴聯絡', en: 'Companion Contact' },
-    internationalFlights: { zh: '國際航段', en: 'International Flights' },
-    outbound: { zh: '去程', en: 'Outbound' },
-    return: { zh: '回程', en: 'Return' },
-    transfer: { zh: '轉機', en: 'Transfer' },
-    mainRoute: { zh: '🗺️ 主要路線', en: '🗺️ Main Route' },
-    importantReminder: { zh: '重要提醒', en: 'Important Reminder' },
-    reminderText: { zh: 'Yosemite 冬季路況可能變化，請出發前確認官方公告，安全第一！', en: 'Yosemite winter conditions may change. Please confirm official announcements before departure. Safety first!' },
-    dayByDay: { zh: '📍 Day by Day 行程', en: '📍 Day by Day Itinerary' },
-    time: { zh: '⏰ 時程', en: '⏰ Schedule' },
-    accommodation: { zh: '🏨 住宿', en: '🏨 Accommodation' },
-    tasks: { zh: '✓ 任務提醒', en: '✓ Task Reminders' },
-    preDepartureChecklist: { zh: '✓ 行前檢查清單', en: '✓ Pre-Departure Checklist' },
-    documents: { zh: '一、證件 & 重要文件', en: 'I. Documents & Important Files' },
-    money: { zh: '二、金錢 / 支付', en: 'II. Money / Payment' },
-    clothing: { zh: '三、衣物（冬季適用）', en: 'III. Clothing (Winter)' },
-    personalCare: { zh: '四、美容 / 個人用品', en: 'IV. Personal Care / Toiletries' },
-    driving: { zh: '五、自駕必備（Yosemite & Grand Canyon）', en: 'V. Driving Essentials (Yosemite & Grand Canyon)' },
-    apps: { zh: '六、手機必備 App', en: 'VI. Essential Apps' },
-    medical: { zh: '七、醫藥 / 緊急用品', en: 'VII. Medical / Emergency Supplies' },
-    winterReminder: { zh: '八、Yosemite 冬季特別提醒', en: 'VIII. Yosemite Winter Special Reminders' },
-    knownExpenses: { zh: '💳 預算概覽', en: '💳 Budget Overview' },
-    paidBy: { zh: '先付', en: 'Paid by' },
-    settleUp: { zh: '💡 分帳提醒', en: '💡 Settlement Reminder' },
-    settleUpText: { zh: '之後的餐廳、油錢、停車費等，可以繼續記在兩邊的表格裡，最後分帳會很方便。建議定期更新，避免遺忘！', en: 'Keep track of restaurants, gas, parking fees, etc. in the shared spreadsheet for convenient settlement. It\'s recommended to update regularly to avoid forgetting.' },
-    blessing: { zh: '✨ 祝福 Victoria 與寶真有個美好的冒險！', en: '✨ Wishing Victoria & BAO-JHEN an amazing adventure!' },
-    quote: { zh: 'From the Grand Canyon to Yosemite\'s snow—May every moment be extraordinary.', en: 'From the Grand Canyon to Yosemite\'s snow—May every moment be extraordinary.' }
-  };
-
-  const lang = language;
-
-  // 響應式設計輔助函數
-  const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
-  const isTablet = typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
-
-  const responsive = {
-    // 手機版 (< 768px)
-    // 平板版 (768px - 1024px) 
-    // 桌面版 (> 1024px)
-    headerPadding: isMobile ? '40px 20px' : isTablet ? '50px 40px' : '80px 40px',
-    contentPadding: isMobile ? '20px 15px' : isTablet ? '30px 30px' : '50px 60px',
-    cardPadding: isMobile ? '25px' : isTablet ? '35px' : '45px',
-    h1Size: isMobile ? '2em' : isTablet ? '2.8em' : '3.8em',
-    h2Size: isMobile ? '1.5em' : isTablet ? '1.8em' : '2.3em',
-    h3Size: isMobile ? '1em' : isTablet ? '1.15em' : '1.3em',
-    emojiSize: isMobile ? '2em' : isTablet ? '2.2em' : '2.8em',
-    smallEmoji: isMobile ? '1.5em' : isTablet ? '1.8em' : '2.2em',
-    navPadding: isMobile ? '15px 10px' : isTablet ? '20px 20px' : '30px 40px',
-    navGap: isMobile ? '4px' : isTablet ? '5px' : '8px',
-    navBtnPadding: isMobile ? '8px 12px' : isTablet ? '10px 20px' : '12px 28px',
-    navFontSize: isMobile ? '0.75em' : isTablet ? '0.85em' : '1em',
-    gridCols: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
-    gridGap: isMobile ? '20px' : isTablet ? '25px' : '35px',
-    maxWidth: isMobile ? '100%' : isTablet ? '1000px' : '1400px'
-  };
-
-  // 莫蘭迪色系 - 溫柔奶油棕 × 天空藍
-  const colors = {
-    primary: '#9B8B7E',      // 奶油棕
-    secondary: '#A8A199',    // 柔和灰棕
-    accent: '#C7B8AD',       // 暖米白
-    sky: '#8DB4C8',          // 溫柔天空藍
-    warm: '#D4C5B9',         // 淡奶油
-    light: '#F5F2ED',        // 極淡米白背景
-    dark: '#6B6159',         // 深褐
-    text: '#4A453F'          // 主文字
-  };
-
-  const itinerary = [
-    {
-      day: 1,
-      date: '12/19 (五)',
-      title: 'TPE → ONT → PHX',
-      highlights: ['台北出發 16:00', 'ONT 轉機', 'PHX 晚間抵達'],
-      details: [
-        '20:30 - JX010 起飛 (TPE → ONT)',
-        '15:50 - 抵達 Ontario',
-        '20:02-22:23 - AA1666 (ONT → PHX)',
-        '22:30+ - 與寶真會合，回 Phoenix'
-      ],
-      accommodation: '寶真家',
-      tasks: ['洗澡', '簡單超市採買', '調時差', '早點睡']
-    },
-    {
-      day: 2,
-      date: '12/20 (六)',
-      title: 'PHX → Las Vegas',
-      highlights: ['高空晚餐', 'Absinthe 秀', '拉斯維加斯豪華體驗'],
-      details: [
-        '11:45 - Sadelle\'s Brunch (Cosmopolitan)',
-        '14:30-16:00 - Bellagio 午休',
-        '17:45 - Top of the World 晚餐 (Stratosphere)',
-        '19:00 - Absinthe 秀 (Caesars Palace)'
-      ],
-      accommodation: 'Bellagio Hotel (NT$ 8,276.36)',
-      tasks: ['Vegas Boulevard 漫步', '拍夜景', '欣賞噴泉表演']
-    },
-    {
-      day: 3,
-      date: '12/21 (日)',
-      title: 'Las Vegas → PHX',
-      highlights: ['輕鬆返程', '緩衝日'],
-      details: [
-        '早上 - 飯店早餐',
-        '10:30-12:00 - Bellagio 周邊拍照',
-        '依機票時間返回 Phoenix'
-      ],
-      accommodation: '寶真家',
-      tasks: ['整理行李', '休息調整']
-    },
-    {
-      day: 4,
-      date: '12/22 (一)',
-      title: 'Phoenix Chill Day',
-      highlights: ['採買行程', '風景公園', 'Road Trip 準備'],
-      details: [
-        'Costco / Target / Outlets 採買',
-        'Desert Botanical Garden 或 Papago Park 看夕陽',
-        '檢查車況（胎壓、雨刷水）',
-        '準備保暖衣物、零食、急救用品'
-      ],
-      accommodation: '寶真家',
-      tasks: ['購物', '檢查裝備', '早睡準備出發']
-    },
-    {
-      day: 5,
-      date: '12/23 (二)',
-      title: 'Phoenix 準備日',
-      highlights: ['最後採買', '行李整理', '早睡備戰'],
-      details: [
-        '補充採買清單 (REI/戶外店)',
-        '整理 6 天 Road Trip 行李',
-        '分類：隨身小包 + 大行李',
-        '早睡為隔天出發做準備'
-      ],
-      accommodation: '寶真家',
-      tasks: ['行李檢查清單', '確認所有物品']
-    },
-    {
-      day: 6,
-      date: '12/24 (三)',
-      title: 'PHX → Flagstaff',
-      highlights: ['正式上山', '聖誕夜出發', '大峽谷前夜'],
-      details: [
-        '18:30 - TSMC Arizona 出發',
-        '18:30-20:30 - 開車約 2 小時',
-        'Check-in Hampton Inn Flagstaff',
-        '附近超市補給'
-      ],
-      accommodation: 'Hampton Inn Flagstaff (USD 294.47)',
-      tasks: ['檢查車況', '早睡準備進 Grand Canyon']
-    },
-    {
-      day: 7,
-      date: '12/25 (四)',
-      title: 'Grand Canyon 西線',
-      highlights: ['Hermit Road', '短健行', '壯麗峽谷景色'],
-      details: [
-        '08:00 - Hampton Inn 出發',
-        '09:30-10:00 - Bright Angel Trailhead',
-        '10:00+ - 園區 Shuttle (西線)',
-        '13:30-16:00 - Hermit Trailhead 輕健行',
-        '18:00-19:00 - Fat Olives 晚餐'
-      ],
-      accommodation: 'Hampton Inn Flagstaff',
-      tasks: ['步道拍照', '日落觀景', '準備相機']
-    },
-    {
-      day: 8,
-      date: '12/26 (五)',
-      title: 'Grand Canyon 東線 → Page',
-      highlights: ['馬蹄灣', 'Geology Museum', '沙漠景色'],
-      details: [
-        '09:30 - Flagstaff 出發',
-        '09:30-10:50 - Drigo\'s Brunch',
-        '多個停靠點：Mather Point, Yavapai, Desert View',
-        '14:50-16:20 - 馬蹄灣 (1.5h 車程)',
-        '16:20-17:30 - Horseshoe Bend 步道'
-      ],
-      accommodation: 'Country Inn & Suites, Page (USD 305.12)',
-      tasks: ['馬蹄灣日出/日落拍照', '湖景觀賞']
-    },
-    {
-      day: 9,
-      date: '12/27 (六)',
-      title: 'Page 羚羊峽谷',
-      highlights: ['光影峽谷', 'Hanging Garden', 'Lake Powell'],
-      details: [
-        '10:00-10:15 - 飯店 → Antelope Canyon',
-        '10:30-12:30 - 羚羊峽谷導覽 (2h)',
-        '13:00-14:00 - Hanging Garden Trailhead',
-        '14:15-14:45 - Wahweap Overlook (Lake Powell 俯瞰)',
-        '15:00+ - 回飯店自由活動'
-      ],
-      accommodation: 'Country Inn & Suites, Page',
-      tasks: ['專業導遊陪同', '攝影機會多', '下午休息']
-    },
-    {
-      day: 10,
-      date: '12/28 (日)',
-      title: 'Bearizona → Polar Express',
-      highlights: ['野生動物園', '聖誕火車之旅', 'Williams'],
-      details: [
-        '10:00 - Page 出發',
-        '12:40-16:00 - Bearizona Wildlife Park (3.5h)',
-        '16:00-16:10 - 前往 Williams Depot',
-        '18:30-20:00 - Polar Express Train Ride'
-      ],
-      accommodation: 'Days Inn by Wyndham Williams (USD 174.98)',
-      tasks: ['自駕動物園', '欣賞聖誕氛圍火車']
-    },
-    {
-      day: 11,
-      date: '12/29 (一)',
-      title: 'Williams → Sedona → PHX',
-      highlights: ['藝術小鎮', '紅岩景色', '返回 Phoenix'],
-      details: [
-        '11:00 - Days Inn 出發',
-        '12:10-14:00 - Uptown Sedona 漫步 + 午餐',
-        '14:00-16:00 - Tlaquepaque Arts & Shopping',
-        '16:00-17:30 - Sedona 景觀餐廳晚餐',
-        '17:30-19:30 - 返回 Phoenix (避開尖峰車流)'
-      ],
-      accommodation: '寶真家',
-      tasks: ['藝術村逛街', '紅岩日落拍照', '完成 Road Trip']
-    },
-    {
-      day: 12,
-      date: '12/30 (二)',
-      title: 'Phoenix Free Day',
-      highlights: ['完全休息', '洗衣整理', '備份記憶卡'],
-      details: [
-        '洗衣、整理照片、備份記憶卡',
-        '市區隨意散步',
-        '咖啡廳耍廢',
-        '補買任何戶外/保暖裝備 (REI)'
-      ],
-      accommodation: '寶真家',
-      tasks: ['全身放空', '整理記憶卡', '休息充電']
-    },
-    {
-      day: 13,
-      date: '12/31 (三)',
-      title: 'PHX 檢查日 & 跨年',
-      highlights: ['Yosemite 前車況檢查', '跨年準備'],
-      details: [
-        '車況全面檢查：機油、輪胎、備胎、雨刷',
-        'AutoZone/O\'Reilly 購買雪鏈',
-        '在平地試裝雪鏈一次',
-        '準備 Yosemite 糧食',
-        '視體力簡單吃跨年飯'
-      ],
-      accommodation: '寶真家',
-      tasks: ['車況檢查清單', '裝雪鏈演習', '跨年慶祝']
-    },
-    {
-      day: 14,
-      date: '01/01 (四)',
-      title: 'PHX → Palm Springs',
-      highlights: ['跨年移動日', '沙漠度假小鎮', '4.5h 車程'],
-      details: [
-        '09:00-10:00 出發',
-        '行車時間：約 4.5 小時',
-        'Check-in Palm Springs 飯店',
-        '泳池放鬆 + 市區散步',
-        'Downtown 步行區 / Palm Canyon Drive'
-      ],
-      accommodation: 'Hilton/Renaissance/Courtyard Palm Springs',
-      tasks: ['放鬆身心', '享受溫暖天氣', '自由安排']
-    },
-    {
-      day: 15,
-      date: '01/02 (五)',
-      title: 'Palm Springs → Fresno',
-      highlights: ['Cabazon Dinosaurs', 'Premium Outlets', '山前準備'],
-      details: [
-        '09:00-10:00 出發',
-        '中途停靠：Cabazon Dinosaurs (30min 拍照)',
-        '可選：Desert Hills Premium Outlets (1-2h)',
-        '傍晚抵達 Fresno',
-        'Check-in 後早睡，為上山準備'
-      ],
-      accommodation: 'Fresno 飯店',
-      tasks: ['購物 / 拍照', '補充零食水', '早睡養精蓄銳']
-    },
-    {
-      day: 16,
-      date: '01/03 (六)',
-      title: 'Fresno → Yosemite Valley',
-      highlights: ['山谷初探', 'Tunnel View', 'Bridalveil Fall'],
-      details: [
-        '09:00-10:00 出發',
-        '1.5-2h 車程抵達 Yosemite',
-        'Tunnel View - 必拍大景',
-        'Bridalveil Fall Trail - 短步道',
-        'Visitor Center + Village',
-        'El Capitan Meadow - 看攀岩者'
-      ],
-      accommodation: 'El Portal/Fish Camp/Oakhurst 園外',
-      tasks: ['檢查雪鏈', '油量 1/2 以上', '熟悉山谷']
-    },
-    {
-      day: 17,
-      date: '01/04 (日)',
-      title: 'Yosemite 深度遊',
-      highlights: ['冬季步道', 'Half Dome 倒影', '雪景散步'],
-      details: [
-        'Lower Yosemite Fall Trail - 必走',
-        'Sentinel Bridge - 下午 Half Dome 倒影',
-        'Curry Village → Mirror Lake - 雪景散步',
-        '若 Badger Pass 開放：可玩雪橇/雪鞋',
-        '若封閉：多走短步道 + 拍雪景'
-      ],
-      accommodation: '同前',
-      tasks: ['查詢 NPS 路況', '備好雪鏈', '早睡準備長途']
-    },
-    {
-      day: 18,
-      date: '01/05 (一)',
-      title: 'Yosemite → PHX',
-      highlights: ['長程返程', '分段走策略', '晚抵達'],
-      details: [
-        '08:00 - 住宿地出發下山',
-        '08:00-12:30 - Yosemite → Bakersfield (4.5h)',
-        '12:30-14:00 - Bakersfield 午餐 + 加油 + 休息',
-        '14:00-20:00 - Bakersfield → Phoenix (6h)',
-        '每 2-2.5h 停一次休息',
-        '約 20:00-21:00 抵達 PHX'
-      ],
-      accommodation: '寶真家',
-      tasks: ['洗澡', '簡單收拾', '準備隔日回台']
-    },
-    {
-      day: 19,
-      date: '01/05 (一)',
-      title: 'PHX → TPE',
-      highlights: ['啟程返家', '完美結束', '回台灣'],
-      details: [
-        '早上 - 最後行李收拾',
-        '確認護照、機票、現金',
-        '12:00-13:00 - 簡單午餐 + 道別',
-        '15:00 - 出發前往 PHX 機場',
-        '17:50-18:07 - AA1666 (PHX → ONT)',
-        '21:45-01/07 04:30 - JX009 (ONT → TPE)'
-      ],
-      accommodation: '回台灣',
-      tasks: ['最後檢查', '道別', '啟程回家']
-    }
-  ];
-
-  const checklist = [
-    {
-      section: '一、證件 & 重要文件',
-      icon: '📄',
-      items: [
-        '護照（效期 ≥ 6 個月）',
-        'ESTA（確認有效 / 重新申請）',
-        '美國簽證（若有）',
-        '行程 PDF / 機票 PDF（手機＋雲端）',
-        '住宿訂單（Bellagio、Page、Williams、Yosemite）',
-        '旅遊保險（電子保單）',
-        '國際駕照 + 台灣駕照',
-        '信用卡（AMEX＋VISA/Master 各一張）',
-        '台灣門號：開漫遊 or eSIM'
-      ]
-    },
-    {
-      section: '二、金錢 / 支付',
-      icon: '💳',
-      items: [
-        '美金現鈔（建議 USD 200–400）',
-        '信用卡國外刷卡已通知銀行',
-        'Apple Pay / Google Pay 設定好',
-        '筆記：誰先付什麼（Victoria / BAO-JHEN LI）',
-        '預留：秀票小費、餐廳小費、停車費、油錢'
-      ]
-    },
-    {
-      section: '三、衣物（冬季適用）',
-      icon: '🎒',
-      items: [
-        '羽絨外套（厚）',
-        '登山保暖外套（中）',
-        '長袖內搭（HEATTECH 或保暖衣）',
-        '長褲 3–4 件（牛仔＋保暖）',
-        '帽子 / 手套 / 圍巾（Yosemite 必備）',
-        '雪地鞋 or 防滑鞋',
-        '襪子（保暖款＋替換多帶）',
-        '室內輕便衣服（Phoenix 舒服穿）'
-      ]
-    },
-    {
-      section: '四、美容 / 個人用品',
-      icon: '✨',
-      items: [
-        '隱形眼鏡 / 眼鏡',
-        '日常保養品（少量分裝）',
-        '化妝品＋卸妝用品',
-        '防曬（雪地反光很強）',
-        '身體乳（美國乾燥）',
-        '止汗、護唇膏、濕紙巾'
-      ]
-    },
-    {
-      section: '五、自駕必備（Yosemite & Grand Canyon）',
-      icon: '🚗',
-      items: [
-        '雪鏈（chains）已買好＋試裝',
-        '輪胎胎壓 OK',
-        '機油 / 水箱水 / 雨刷水',
-        '路線離線地圖下載（Google Maps Offline）',
-        '車上：水、零食、保暖毯、手機充電線',
-        '行車紀錄器（如有）'
-      ]
-    },
-    {
-      section: '六、手機必備 App',
-      icon: '📱',
-      items: [
-        'Google Maps / Waze',
-        'NPS（美國國家公園路況）',
-        'Airbnb / Hotels.com / Booking.com',
-        'Uber / Lyft',
-        'Yelp（餐廳評價）',
-        'Instagram（拍照打卡）',
-        'AccuWeather（天氣預報）'
-      ]
-    },
-    {
-      section: '七、醫藥 / 緊急用品',
-      icon: '⚕️',
-      items: [
-        '止痛藥（Advil / Panadol）',
-        '暈車藥',
-        '腸胃藥',
-        '熱敷包（冬季車上必備）',
-        '維他命 C / D',
-        '皮膚過敏藥膏',
-        '小型急救包'
-      ]
-    },
-    {
-      section: '八、Yosemite 冬季特別提醒',
-      icon: '❄️',
-      items: [
-        '1 月初路況不穩，每天查看 R1 / R2 / 鎖鏈規定',
-        '地面結冰，鞋底一定要防滑',
-        '雪鏈放在後車廂容易拿到',
-        '陽光反射雪面很強，墨鏡一定要帶',
-        '電子設備在低溫掉電快，行動電源多準備'
-      ]
-    }
-  ];
-
-  const finances = [
-    {
-      who: 'Victoria 先付',
-      items: [
-        { name: { zh: 'Bellagio Hotel', en: 'Bellagio Hotel' }, amount: 'NT$ 8,276.36' },
-        { name: { zh: 'Top of the World 窗邊座位費', en: 'Top of the World Window Seat' }, amount: 'USD 54' },
-        { name: { zh: 'Sadelle\'s Brunch (信用卡預授權)', en: 'Sadelle\'s Brunch (Credit Card Authorization)' }, amount: 'No-Show 會收 USD 25' }
-      ]
-    },
-    {
-      who: '寶真（BAO-JHEN LI）先付',
-      items: [
-        { name: { zh: 'PHX ↔ LAS 機票（2人）', en: 'PHX ↔ LAS Flight Tickets (2 people)' }, amount: 'USD 677.9' },
-        { name: { zh: 'Absinthe 秀（2人）', en: 'Absinthe Show (2 people)' }, amount: 'USD 429.36' },
-        { name: { zh: 'Hampton Inn Flagstaff', en: 'Hampton Inn Flagstaff' }, amount: 'USD 294.47' },
-        { name: { zh: 'Country Inn & Suites, Page', en: 'Country Inn & Suites, Page' }, amount: 'USD 305.12' },
-        { name: { zh: 'Days Inn by Wyndham Williams', en: 'Days Inn by Wyndham Williams' }, amount: 'USD 174.98' },
-        { name: { zh: 'Polar Express Train Ride', en: 'Polar Express Train Ride' }, amount: 'USD 161.16' },
-        { name: { zh: '羚羊峽谷行程（2人）', en: 'Antelope Canyon Tour (2 people)' }, amount: 'TWD 4,698' }
-      ]
-    }
-  ];
-
-  return (
-    <div style={{ backgroundColor: colors.light, minHeight: '100vh', fontFamily: '"Segoe UI", "Georgia", serif' }}>
-      {/* 語言切換按鈕 - 手機優化 */}
-      <div style={{
-        position: 'fixed',
-        top: '12px',
-        right: '12px',
-        zIndex: 100,
-        display: 'flex',
-        gap: '6px'
-      }}>
-        <button
-          onClick={() => setLanguage('zh')}
-          style={{
-            padding: window.innerWidth < 768 ? '8px 12px' : '10px 16px',
-            border: 'none',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: window.innerWidth < 768 ? '0.8em' : '0.9em',
-            fontWeight: '600',
-            backgroundColor: language === 'zh' ? colors.primary : 'white',
-            color: language === 'zh' ? 'white' : colors.dark,
-            boxShadow: '0 4px 12px rgba(155, 139, 126, 0.15)',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          中文
-        </button>
-        <button
-          onClick={() => setLanguage('en')}
-          style={{
-            padding: window.innerWidth < 768 ? '8px 12px' : '10px 16px',
-            border: 'none',
-            borderRadius: '20px',
-            cursor: 'pointer',
-            fontSize: window.innerWidth < 768 ? '0.8em' : '0.9em',
-            fontWeight: '600',
-            backgroundColor: language === 'en' ? colors.primary : 'white',
-            color: language === 'en' ? 'white' : colors.dark,
-            boxShadow: '0 4px 12px rgba(155, 139, 126, 0.15)',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          EN
-        </button>
-      </div>
-
-      {/* 標題區 */}
-      <div style={{
-        background: `linear-gradient(135deg, ${colors.sky} 0%, ${colors.primary} 50%, ${colors.warm} 100%)`,
-        padding: responsive.headerPadding,
-        textAlign: 'center',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: isMobile ? '100px' : '300px',
-          height: isMobile ? '100px' : '300px',
-          backgroundColor: colors.accent,
-          borderRadius: '50%',
-          opacity: '0.15',
-          transform: isMobile ? 'translate(50px, -50px)' : 'translate(100px, -100px)'
-        }} />
-        <h1 style={{
-          fontSize: responsive.h1Size,
-          fontWeight: '300',
-          letterSpacing: isMobile ? '2px' : '3px',
-          marginBottom: '10px',
-          position: 'relative',
-          zIndex: 1,
-          fontFamily: '"Georgia", serif'
-        }}>
-          {language === 'zh' ? 'Victoria 全美西行' : 'Victoria\'s USA West Coast Journey'}
-        </h1>
-        <p style={{
-          fontSize: isMobile ? '1em' : '1.3em',
-          fontWeight: '300',
-          letterSpacing: isMobile ? '1px' : '2px',
-          position: 'relative',
-          zIndex: 1
-        }}>
-          {language === 'zh' ? '2025/12/19 – 2026/01/07' : 'Dec 19, 2025 – Jan 7, 2026'}
-        </p>
-        <p style={{
-          fontSize: isMobile ? '0.75em' : '0.95em',
-          marginTop: '15px',
-          opacity: '0.95',
-          position: 'relative',
-          zIndex: 1,
-          letterSpacing: isMobile ? '0.5px' : '1px'
-        }}>
-          {language === 'zh' 
-            ? 'Phoenix • Las Vegas • Grand Canyon • Page • Williams • Sedona • Palm Springs • Yosemite' 
-            : 'Phoenix • Las Vegas • Grand Canyon • Page • Williams • Sedona • Palm Springs • Yosemite'}
-        </p>
-      </div>
-
-      {/* 導航標籤 - 手機優化 */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: responsive.navGap,
-        padding: responsive.navPadding,
-        backgroundColor: 'white',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-        flexWrap: 'wrap',
-        position: 'sticky',
-        top: 0,
-        zIndex: 10
-      }}>
-        {['overview', 'itinerary', 'checklist', 'finances'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveSection(tab)}
-            style={{
-              padding: responsive.navBtnPadding,
-              border: 'none',
-              backgroundColor: activeSection === tab ? colors.primary : 'transparent',
-              color: activeSection === tab ? 'white' : colors.dark,
-              cursor: 'pointer',
-              fontSize: responsive.navFontSize,
-              fontWeight: activeSection === tab ? '600' : '400',
-              letterSpacing: '0.5px',
-              transition: 'all 0.3s ease',
-              borderRadius: '4px',
-              textTransform: 'uppercase',
-              fontFamily: '"Georgia", serif',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            {tab === 'overview' && t.overview[lang]}
-            {tab === 'itinerary' && t.itinerary[lang]}
-            {tab === 'checklist' && t.checklist[lang]}
-            {tab === 'finances' && t.financesTab[lang]}
-          </button>
-        ))}
-      </div>
-
-      {/* 內容區 - 手機優化 */}
-      <div style={{ maxWidth: responsive.maxWidth, margin: '0 auto', padding: responsive.contentPadding }}>
-        
-        {/* 總覽 */}
-        {activeSection === 'overview' && (
-          <div style={{ animation: 'fadeIn 0.5s ease' }}>
-            <h2 style={{
-              fontSize: responsive.h2Size,
-              color: colors.dark,
-              marginBottom: isMobile ? '20px' : isTablet ? '30px' : '40px',
-              fontWeight: '300',
-              letterSpacing: '1.5px',
-              fontFamily: '"Georgia", serif',
-              textAlign: 'center'
-            }}>
-              {t.tripOverview[lang]}
-            </h2>
-
-            {/* 關鍵資訊卡片 - 更優雅的設計 */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: responsive.gridCols,
-              gap: responsive.gridGap,
-              marginBottom: '50px'
-            }}>
-              {/* 旅程時長卡 */}
-              <div style={{
-                backgroundColor: 'white',
-                padding: responsive.cardPadding,
-                borderRadius: '12px',
-                boxShadow: '0 8px 30px rgba(155, 139, 126, 0.1)',
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'all 0.3s ease',
-                border: `1px solid rgba(155, 139, 126, 0.15)`
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: isMobile ? '80px' : '120px',
-                  height: isMobile ? '80px' : '120px',
-                  backgroundColor: colors.sky,
-                  borderRadius: '50%',
-                  opacity: '0.08',
-                  transform: 'translate(40px, -40px)'
-                }} />
-                <div style={{
-                  position: 'relative',
-                  zIndex: 1
-                }}>
-                  <div style={{
-                    fontSize: responsive.emojiSize,
-                    marginBottom: '15px',
-                    lineHeight: '1'
-                  }}>📅</div>
-                  <h3 style={{
-                    color: colors.primary,
-                    marginBottom: '15px',
-                    fontWeight: '600',
-                    fontSize: isMobile ? '1em' : '1.1em',
-                    letterSpacing: '0.5px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {t.tripDuration[lang]}
-                  </h3>
-                  <p style={{
-                    color: colors.text,
-                    fontSize: isMobile ? '1.1em' : '1.3em',
-                    fontWeight: '500',
-                    lineHeight: '1.8',
-                    marginBottom: '8px'
-                  }}>
-                    {language === 'zh' ? '19 天 20 夜' : '19 days & 20 nights'}
-                  </p>
-                  <p style={{
-                    color: colors.secondary,
-                    fontSize: isMobile ? '0.85em' : '0.9em',
-                    lineHeight: '1.6'
-                  }}>
-                    {language === 'zh' ? '2025/12/19 – 2026/01/07' : 'Dec 19, 2025 – Jan 7, 2026'}
-                  </p>
-                </div>
-              </div>
-
-              {/* 旅伴聯絡卡 */}
-              <div style={{
-                backgroundColor: 'white',
-                padding: '40px',
-                borderRadius: '12px',
-                boxShadow: '0 8px 30px rgba(155, 139, 126, 0.1)',
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'all 0.3s ease',
-                border: `1px solid rgba(155, 139, 126, 0.15)`
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '120px',
-                  height: '120px',
-                  backgroundColor: colors.secondary,
-                  borderRadius: '50%',
-                  opacity: '0.08',
-                  transform: 'translate(40px, -40px)'
-                }} />
-                <div style={{
-                  position: 'relative',
-                  zIndex: 1
-                }}>
-                  <div style={{
-                    fontSize: '2.5em',
-                    marginBottom: '15px',
-                    lineHeight: '1'
-                  }}>👥</div>
-                  <h3 style={{
-                    color: colors.secondary,
-                    marginBottom: '15px',
-                    fontWeight: '600',
-                    fontSize: '1.1em',
-                    letterSpacing: '0.5px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {t.companion[lang]}
-                  </h3>
-                  <p style={{
-                    color: colors.dark,
-                    fontSize: '1em',
-                    fontWeight: '600',
-                    marginBottom: '10px'
-                  }}>
-                    {language === 'zh' ? '李寶真' : 'BAO-JHEN LI'}
-                  </p>
-                  <p style={{
-                    color: colors.text,
-                    fontSize: '0.9em',
-                    lineHeight: '1.8',
-                    margin: 0
-                  }}>
-                    <span style={{ display: 'block', marginBottom: '5px' }}>📱 602-816-1163</span>
-                    <span style={{ display: 'block' }}>📍 Phoenix, AZ 85085</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* 國際航段卡 */}
-              <div style={{
-                backgroundColor: 'white',
-                padding: '40px',
-                borderRadius: '12px',
-                boxShadow: '0 8px 30px rgba(155, 139, 126, 0.1)',
-                position: 'relative',
-                overflow: 'hidden',
-                transition: 'all 0.3s ease',
-                border: `1px solid rgba(155, 139, 126, 0.15)`
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  width: '120px',
-                  height: '120px',
-                  backgroundColor: colors.sky,
-                  borderRadius: '50%',
-                  opacity: '0.08',
-                  transform: 'translate(40px, -40px)'
-                }} />
-                <div style={{
-                  position: 'relative',
-                  zIndex: 1
-                }}>
-                  <div style={{
-                    fontSize: '2.5em',
-                    marginBottom: '15px',
-                    lineHeight: '1'
-                  }}>✈️</div>
-                  <h3 style={{
-                    color: colors.sky,
-                    marginBottom: '15px',
-                    fontWeight: '600',
-                    fontSize: '1.1em',
-                    letterSpacing: '0.5px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {t.internationalFlights[lang]}
-                  </h3>
-                  <p style={{
-                    color: colors.text,
-                    fontSize: '0.9em',
-                    lineHeight: '1.8',
-                    margin: 0
-                  }}>
-                    <span style={{ display: 'block', marginBottom: '5px' }}>
-                      {language === 'zh' ? '去程' : 'Outbound'}: STARLUX JX010
-                    </span>
-                    <span style={{ display: 'block', marginBottom: '5px' }}>
-                      {language === 'zh' ? '回程' : 'Return'}: STARLUX JX009
-                    </span>
-                    <span style={{ display: 'block' }}>
-                      {language === 'zh' ? '轉機' : 'Transfer'}: American Airlines
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* 路線地圖卡 */}
-            <div style={{
-              backgroundColor: 'white',
-              padding: '45px',
-              borderRadius: '12px',
-              boxShadow: '0 8px 30px rgba(155, 139, 126, 0.1)',
-              marginBottom: '40px',
-              border: `1px solid rgba(155, 139, 126, 0.15)`,
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                position: 'absolute',
-                bottom: -50,
-                left: -50,
-                width: '200px',
-                height: '200px',
-                backgroundColor: colors.warm,
-                borderRadius: '50%',
-                opacity: '0.06'
-              }} />
-              <h3 style={{ 
-                fontSize: '1.4em',
-                color: colors.dark,
-                marginBottom: '30px',
-                fontWeight: '500',
-                fontFamily: '"Georgia", serif',
-                letterSpacing: '0.5px',
-                position: 'relative',
-                zIndex: 1
-              }}>
-                {t.mainRoute[lang]}
-              </h3>
-              
-              {/* 文字路線 - 簡潔易讀 */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                fontSize: '1.05em',
-                color: colors.text,
-                lineHeight: '1.8',
-                flexWrap: 'wrap',
-                position: 'relative',
-                zIndex: 1
-              }}>
-                {(language === 'zh' 
-                  ? ['台北', '鳳凰城', '拉斯維加斯', '大峽谷', 'Page', 'Williams', 'Sedona', '鳳凰城', '棕櫚泉', 'Fresno', 'Yosemite', '台北']
-                  : ['Taipei', 'Phoenix', 'Las Vegas', 'Grand Canyon', 'Page', 'Williams', 'Sedona', 'Phoenix', 'Palm Springs', 'Fresno', 'Yosemite', 'Taipei']
-                ).map((city, idx, arr) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <span style={{
-                      fontWeight: '500',
-                      color: colors.dark,
-                      whiteSpace: 'nowrap'
-                    }}>
-                      {city}
-                    </span>
-                    {idx < arr.length - 1 && (
-                      <span style={{
-                        color: colors.primary,
-                        fontSize: '1.2em',
-                        fontWeight: '600'
-                      }}>
-                        →
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 重要提醒 - 更優雅的設計 */}
-            <div style={{
-              backgroundColor: 'linear-gradient(135deg, rgba(212, 197, 185, 0.1) 0%, rgba(141, 180, 200, 0.1) 100%)',
-              padding: '35px',
-              borderRadius: '12px',
-              borderLeft: `5px solid ${colors.primary}`,
-              display: 'flex',
-              gap: '20px',
-              alignItems: 'flex-start',
-              backdropFilter: 'blur(10px)',
-              border: `1px solid rgba(155, 139, 126, 0.2)`
-            }}>
-              <div style={{
-                fontSize: '1.5em',
-                flexShrink: 0,
-                marginTop: '5px'
-              }}>💡</div>
-              <div style={{
-                flex: 1
-              }}>
-                <h4 style={{
-                  color: colors.primary,
-                  marginBottom: '12px',
-                  fontWeight: '600',
-                  fontSize: '1.05em',
-                  letterSpacing: '0.5px'
-                }}>
-                  {t.importantReminder[lang]}
-                </h4>
-                <p style={{
-                  color: colors.text,
-                  fontSize: '0.95em',
-                  lineHeight: '1.7',
-                  margin: 0
-                }}>
-                  {t.reminderText[lang]}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 行程表 */}
-        {activeSection === 'itinerary' && (
-          <div style={{ animation: 'fadeIn 0.5s ease' }}>
-            <h2 style={{
-              fontSize: responsive.h2Size,
-              color: colors.dark,
-              marginBottom: isMobile ? '20px' : '30px',
-              fontWeight: '300',
-              letterSpacing: isMobile ? '0.5px' : '1px',
-              fontFamily: '"Georgia", serif',
-              borderBottom: `2px solid ${colors.primary}`,
-              paddingBottom: '15px'
-            }}>
-              {t.dayByDay[lang]}
-            </h2>
-
-            <div style={{ display: 'grid', gap: responsive.gridGap }}>
-              {itinerary.map((day, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: 'white',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 15px rgba(155, 139, 126, 0.08)',
-                    overflow: 'hidden',
-                    transition: 'all 0.3s ease'
-                  }}
-                >
-                  <div
-                    onClick={() => setActiveDay(activeDay === idx ? null : idx)}
-                    style={{
-                      padding: '25px',
-                      backgroundColor: activeDay === idx ? colors.primary : colors.light,
-                      borderLeft: `4px solid ${colors.primary}`,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{
-                        fontSize: '1.3em',
-                        color: activeDay === idx ? 'white' : colors.dark,
-                        margin: '0 0 8px 0',
-                        fontWeight: '600',
-                        fontFamily: '"Georgia", serif'
-                      }}>
-                        {language === 'zh' ? `Day ${day.day} | ${day.date}` : `Day ${day.day} | ${day.date}`}
-                      </h3>
-                      <p style={{
-                        fontSize: '1.1em',
-                        color: activeDay === idx ? 'rgba(255,255,255,0.9)' : colors.primary,
-                        margin: 0,
-                        fontWeight: '500'
-                      }}>
-                        {day.title}
-                      </p>
-                    </div>
-                    <ChevronDown
-                      size={24}
-                      style={{
-                        color: activeDay === idx ? 'white' : colors.dark,
-                        transform: activeDay === idx ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.3s ease',
-                        marginLeft: '20px'
-                      }}
-                    />
-                  </div>
-
-                  {activeDay === idx && (
-                    <div style={{ padding: '30px', backgroundColor: 'white' }}>
-                      <div style={{ marginBottom: '25px' }}>
-                        <h4 style={{
-                          color: colors.secondary,
-                          marginBottom: '12px',
-                          fontWeight: '600',
-                          fontSize: '1em',
-                          textTransform: 'uppercase',
-                          letterSpacing: '1px'
-                        }}>
-                          {t.time[lang]}
-                        </h4>
-                        {day.details.map((detail, i) => (
-                          <p key={i} style={{
-                            margin: '8px 0',
-                            color: colors.text,
-                            fontSize: '0.95em',
-                            lineHeight: '1.6',
-                            paddingLeft: '15px',
-                            borderLeft: `2px solid ${colors.accent}`
-                          }}>
-                            {detail}
-                          </p>
-                        ))}
-                      </div>
-
-                      <div style={{ marginBottom: '25px' }}>
-                        <h4 style={{
-                          color: colors.sky,
-                          marginBottom: '12px',
-                          fontWeight: '600',
-                          fontSize: '1em',
-                          textTransform: 'uppercase',
-                          letterSpacing: '1px'
-                        }}>
-                          {t.accommodation[lang]}
-                        </h4>
-                        <p style={{
-                          margin: 0,
-                          color: colors.text,
-                          fontSize: '0.95em',
-                          lineHeight: '1.6',
-                          paddingLeft: '15px',
-                          borderLeft: `2px solid ${colors.sky}`
-                        }}>
-                          {day.accommodation}
-                        </p>
-                      </div>
-
-                      {day.tasks && day.tasks.length > 0 && (
-                        <div>
-                          <h4 style={{
-                            color: colors.warm,
-                            marginBottom: '12px',
-                            fontWeight: '600',
-                            fontSize: '1em',
-                            textTransform: 'uppercase',
-                            letterSpacing: '1px'
-                          }}>
-                            {t.tasks[lang]}
-                          </h4>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                            {day.tasks.map((task, i) => (
-                              <span key={i} style={{
-                                backgroundColor: '#F5EAE0',
-                                padding: '8px 16px',
-                                borderRadius: '20px',
-                                color: colors.dark,
-                                fontSize: '0.9em',
-                                fontWeight: '500'
-                              }}>
-                                {task}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 檢查清單 */}
-        {activeSection === 'checklist' && (
-          <div style={{ animation: 'fadeIn 0.5s ease' }}>
-            <h2 style={{
-              fontSize: responsive.h2Size,
-              color: colors.dark,
-              marginBottom: isMobile ? '20px' : '30px',
-              fontWeight: '300',
-              letterSpacing: isMobile ? '0.5px' : '1px',
-              fontFamily: '"Georgia", serif',
-              borderBottom: `2px solid ${colors.primary}`,
-              paddingBottom: '15px'
-            }}>
-              {t.preDepartureChecklist[lang]}
-            </h2>
-
-            <div style={{ display: 'grid', gap: responsive.gridGap }}>
-              {checklist.map((section, idx) => (
-                <div key={idx} style={{
-                  backgroundColor: 'white',
-                  padding: responsive.cardPadding,
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 15px rgba(155, 139, 126, 0.08)',
-                  borderTop: `4px solid ${colors.primary}`
-                }}>
-                  <h3 style={{
-                    fontSize: '1.3em',
-                    color: colors.dark,
-                    marginBottom: '20px',
-                    fontWeight: '600',
-                    fontFamily: '"Georgia", serif'
-                  }}>
-                    {section.icon} {section.section}
-                  </h3>
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                    gap: '15px'
-                  }}>
-                    {section.items.map((item, i) => (
-                      <label key={i} style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '12px',
-                        cursor: 'pointer',
-                        padding: '10px',
-                        borderRadius: '4px',
-                        transition: 'background 0.2s ease'
-                      }}>
-                        <input
-                          type="checkbox"
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            marginTop: '2px',
-                            cursor: 'pointer',
-                            accentColor: colors.primary
-                          }}
-                        />
-                        <span style={{
-                          color: colors.text,
-                          fontSize: '0.95em',
-                          lineHeight: '1.5'
-                        }}>
-                          {item}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 金流 */}
-        {activeSection === 'finances' && (
-          <div style={{ animation: 'fadeIn 0.5s ease' }}>
-            <h2 style={{
-              fontSize: responsive.h2Size,
-              color: colors.dark,
-              marginBottom: isMobile ? '20px' : '30px',
-              fontWeight: '300',
-              letterSpacing: isMobile ? '0.5px' : '1px',
-              fontFamily: '"Georgia", serif',
-              borderBottom: `2px solid ${colors.primary}`,
-              paddingBottom: '15px'
-            }}>
-              {t.knownExpenses[lang]}
-            </h2>
-
-            <div style={{ display: 'grid', gap: responsive.gridGap }}>
-              {finances.map((section, idx) => (
-                <div key={idx} style={{
-                  backgroundColor: 'white',
-                  padding: responsive.cardPadding,
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 15px rgba(155, 139, 126, 0.08)',
-                  borderLeft: `4px solid ${colors.primary}`
-                }}>
-                  <h3 style={{
-                    fontSize: '1.3em',
-                    color: colors.dark,
-                    marginBottom: '20px',
-                    fontWeight: '600',
-                    fontFamily: '"Georgia", serif'
-                  }}>
-                    {language === 'zh' 
-                      ? section.who 
-                      : (section.who.includes('Victoria') 
-                          ? 'Victoria Paid' 
-                          : 'BAO-JHEN (BAO-JHEN LI) Paid')}
-                  </h3>
-                  <div style={{ display: 'grid', gap: '15px' }}>
-                    {section.items.map((item, i) => (
-                      <div key={i} style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        paddingBottom: '15px',
-                        borderBottom: 'none'
-                      }}>
-                        <span style={{
-                          color: colors.text,
-                          fontSize: '1em',
-                          flex: 1
-                        }}>
-                          {typeof item.name === 'string' ? item.name : item.name[language]}
-                        </span>
-                        <span style={{
-                          color: colors.primary,
-                          fontSize: '1em',
-                          fontWeight: '600',
-                          whiteSpace: 'nowrap',
-                          marginLeft: '20px'
-                        }}>
-                          {item.amount}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div style={{
-              backgroundColor: '#F5F0EB',
-              padding: '25px',
-              borderRadius: '8px',
-              marginTop: '30px',
-              borderLeft: `4px solid ${colors.secondary}`
-            }}>
-              <h4 style={{ color: colors.secondary, marginBottom: '12px', fontWeight: '600' }}>
-                {t.settleUp[lang]}
-              </h4>
-              <p style={{ color: colors.text, fontSize: '0.95em', lineHeight: '1.6', margin: 0 }}>
-                {t.settleUpText[lang]}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 頁尾 */}
-      <div style={{
-        backgroundColor: '#7A6E63',
-        color: 'white',
-        padding: isMobile ? '30px 20px' : '40px 20px',
-        textAlign: 'center',
-        marginTop: '60px'
-      }}>
-        <p style={{
-          fontSize: isMobile ? '0.85em' : '0.95em',
-          letterSpacing: '1px',
-          margin: '0 0 10px 0',
-          fontFamily: '"Georgia", serif'
-        }}>
-          {t.blessing[lang]}
-        </p>
-        <p style={{
-          fontSize: isMobile ? '0.75em' : '0.85em',
-          opacity: '0.8',
-          margin: 0,
-          letterSpacing: '0.5px'
-        }}>
-          {t.quote[lang]}
-        </p>
-      </div>
-
-      <style>{`
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victoria 全美西行 - 旅遊手冊</title>
+    <style>
         * {
-          box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #9B8B7E;
+            --secondary: #A8A199;
+            --accent: #C7B8AD;
+            --sky: #8DB4C8;
+            --warm: #D4C5B9;
+            --light: #F5F2ED;
+            --dark: #6B6159;
+            --text: #4A453F;
+        }
+
+        body {
+            font-family: 'Georgia', 'Segoe UI', serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* 語言切換按鈕 */
+        .language-switcher {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 100;
+            display: flex;
+            gap: 6px;
+        }
+
+        .lang-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            background-color: white;
+            color: var(--dark);
+            box-shadow: 0 4px 12px rgba(155, 139, 126, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .lang-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 標題區 */
+        .header {
+            background: linear-gradient(135deg, var(--sky) 0%, var(--primary) 50%, var(--warm) 100%);
+            padding: 80px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.15;
+            transform: translate(100px, -100px);
+        }
+
+        .header h1 {
+            font-size: 3.8em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .route {
+            font-size: 0.95em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 1px;
+        }
+
+        /* 導航標籤 */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 30px 40px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            border: none;
+            background-color: transparent;
+            color: var(--dark);
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-family: 'Georgia', serif;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 內容區 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 60px;
+        }
+
+        .section {
+            animation: fadeIn 0.5s ease;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
 
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        input[type="checkbox"]:checked {
-          filter: brightness(1.1);
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        label:hover {
-          background: rgba(168, 153, 104, 0.05);
+        /* 標題 */
+        h2 {
+            font-size: 2.3em;
+            color: var(--dark);
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1.5px;
+            font-family: 'Georgia', serif;
+            text-align: center;
         }
 
-        /* 桌面版本優化 (> 1024px) */
-        @media (min-width: 1025px) {
-          body {
-            font-size: 16px;
-          }
+        .section.itinerary h2,
+        .section.checklist h2,
+        .section.finances h2 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+            text-align: left;
+        }
 
-          h1 {
-            font-size: 3.8em !important;
-            line-height: 1.2;
-          }
-          
-          h2 {
-            font-size: 2.3em !important;
-            margin-bottom: 35px !important;
-          }
-          
-          h3 {
-            font-size: 1.3em !important;
-          }
+        /* 卡片網格 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            margin-bottom: 50px;
+        }
 
-          p {
-            font-size: 1em !important;
-            line-height: 1.7;
-          }
-
-          button {
-            font-size: 1em !important;
-            padding: 12px 28px !important;
+        .card {
+            background-color: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.1);
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
-          }
+            border: 1px solid rgba(155, 139, 126, 0.15);
+        }
 
-          button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(155, 139, 126, 0.2);
-          }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 120px;
+            background-color: var(--sky);
+            border-radius: 50%;
+            opacity: 0.08;
+            transform: translate(40px, -40px);
+        }
 
-          /* 卡片懸停效果 - 桌面版 */
-          [style*="backgroundColor: 'white'"] {
-            transition: all 0.3s ease;
-          }
-
-          [style*="backgroundColor: 'white'"]:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(155, 139, 126, 0.15) !important;
-          }
+            box-shadow: 0 12px 40px rgba(155, 139, 126, 0.15);
         }
 
-        /* 平板版本優化 (768px - 1024px) */
-        @media (min-width: 769px) and (max-width: 1024px) {
-          body {
-            font-size: 15px;
-          }
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
 
-          h1 {
-            font-size: 2.8em !important;
-          }
+        .card-emoji {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
 
-          h2 {
-            font-size: 1.8em !important;
-            margin-bottom: 25px !important;
-          }
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-          p {
-            font-size: 0.95em !important;
+        .card p {
+            color: var(--text);
+            margin: 8px 0;
+            line-height: 1.8;
+        }
+
+        /* 路線卡 */
+        .route-card {
+            background-color: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.1);
+            margin-bottom: 40px;
+            border: 1px solid rgba(155, 139, 126, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .route-card::before {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background-color: var(--warm);
+            border-radius: 50%;
+            opacity: 0.06;
+        }
+
+        .route-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .route-title {
+            font-size: 1.4em;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.5px;
+        }
+
+        .route-cities {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.05em;
+            color: var(--text);
+            line-height: 1.8;
+            flex-wrap: wrap;
+        }
+
+        .route-cities .city {
+            font-weight: 500;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .route-cities .arrow {
+            color: var(--primary);
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        /* 重要提醒 */
+        .reminder {
+            background: linear-gradient(135deg, rgba(212, 197, 185, 0.1) 0%, rgba(141, 180, 200, 0.1) 100%);
+            padding: 35px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            border: 1px solid rgba(155, 139, 126, 0.2);
+        }
+
+        .reminder-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .reminder h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1.05em;
+            letter-spacing: 0.5px;
+        }
+
+        .reminder p {
+            color: var(--text);
+            font-size: 0.95em;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* 行程卡 */
+        .itinerary-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(155, 139, 126, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .itinerary-header {
+            padding: 25px;
+            background-color: var(--light);
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .itinerary-header:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .itinerary-header.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .itinerary-header h3 {
+            margin: 0 0 8px 0;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+            font-size: 1.3em;
+        }
+
+        .itinerary-header p {
+            margin: 0;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .itinerary-header.active h3 {
+            color: white;
+        }
+
+        .itinerary-header.active p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .chevron {
+            width: 24px;
+            height: 24px;
+            margin-left: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .itinerary-header.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .itinerary-content {
+            padding: 30px;
+            background-color: white;
+            display: none;
+        }
+
+        .itinerary-content.active {
+            display: block;
+        }
+
+        .itinerary-section {
+            margin-bottom: 25px;
+        }
+
+        .itinerary-section h4 {
+            color: var(--secondary);
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .itinerary-section ul {
+            list-style: none;
+            padding-left: 15px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .itinerary-section li {
+            margin: 8px 0;
+            color: var(--text);
+            font-size: 0.95em;
             line-height: 1.6;
-          }
-
-          button {
-            font-size: 0.85em !important;
-            padding: 10px 20px !important;
-          }
         }
 
-        /* 手機版本優化 (< 768px) */
-        @media (max-width: 768px) {
-          body {
-            font-size: 14px;
-          }
+        .task-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-          h1 {
-            font-size: 2em !important;
-            letter-spacing: 2px !important;
-          }
-          
-          h2 {
-            font-size: 1.5em !important;
-            margin-bottom: 20px !important;
-            padding: 0 10px;
-          }
-          
-          h3 {
-            font-size: 1em !important;
-          }
-          
-          h4 {
-            font-size: 0.95em !important;
-          }
-          
-          p {
-            font-size: 0.9em !important;
+        .task-tag {
+            background-color: #F5EAE0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: var(--dark);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        /* 檢查清單 */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+            margin-bottom: 40px;
+        }
+
+        .checklist-card {
+            background-color: white;
+            padding: 45px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(155, 139, 126, 0.08);
+            border-top: 4px solid var(--primary);
+        }
+
+        .checklist-card h3 {
+            font-size: 1.3em;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+        }
+
+        .checklist-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(168, 153, 104, 0.05);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 0.95em;
             line-height: 1.5;
-          }
-
-          button {
-            font-size: 0.75em !important;
-            padding: 8px 12px !important;
-          }
-
-          /* 確保卡片在手機上適配 */
-          [role="button"],
-          [style*="backgroundColor: 'white'"] {
-            margin: 0 !important;
-          }
-
-          /* 移除桌面懸停效果 */
-          [style*="backgroundColor: 'white'"]:hover {
-            transform: none !important;
-          }
         }
-      `}</style>
-    </div>
-  );
-};
 
-export default VictoriaUSATrip;
+        /* 預算 */
+        .finances-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+            margin-bottom: 30px;
+        }
+
+        .finance-card {
+            background-color: white;
+            padding: 45px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(155, 139, 126, 0.08);
+            border-left: 4px solid var(--primary);
+        }
+
+        .finance-card h3 {
+            font-size: 1.3em;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+        }
+
+        .finance-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .finance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+        }
+
+        .finance-item .name {
+            color: var(--text);
+            font-size: 1em;
+            flex: 1;
+        }
+
+        .finance-item .amount {
+            color: var(--primary);
+            font-size: 1em;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 20px;
+        }
+
+        .settle-up {
+            background-color: #F5F0EB;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .settle-up h4 {
+            color: var(--secondary);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .settle-up p {
+            color: var(--text);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* 頁尾 */
+        .footer {
+            background-color: #7A6E63;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            margin: 10px 0;
+        }
+
+        .footer .blessing {
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            font-family: 'Georgia', serif;
+        }
+
+        .footer .quote {
+            font-size: 0.85em;
+            opacity: 0.8;
+            letter-spacing: 0.5px;
+        }
+
+        /* 隱藏翻譯 */
+        .hidden {
+            display: none;
+        }
+
+        /* 響應式 - 平板 */
+        @media (max-width: 1024px) {
+            .header {
+                padding: 50px 40px;
+            }
+
+            .header h1 {
+                font-size: 2.8em;
+            }
+
+            .header .subtitle {
+                font-size: 1.1em;
+            }
+
+            .container {
+                padding: 30px 30px;
+                max-width: 1000px;
+            }
+
+            h2 {
+                font-size: 1.8em;
+                margin-bottom: 25px;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .checklist-grid,
+            .finances-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                padding: 20px 20px;
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.85em;
+            }
+        }
+
+        /* 響應式 - 手機 */
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+                letter-spacing: 2px;
+            }
+
+            .header .subtitle {
+                font-size: 1em;
+                letter-spacing: 1px;
+            }
+
+            .header .route {
+                font-size: 0.75em;
+                letter-spacing: 0.5px;
+            }
+
+            .header::before {
+                width: 100px;
+                height: 100px;
+                transform: translate(50px, -50px);
+            }
+
+            .container {
+                padding: 20px 15px;
+                max-width: 100%;
+            }
+
+            .nav-tabs {
+                padding: 15px 10px;
+                gap: 4px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.75em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .card-emoji {
+                font-size: 2em;
+            }
+
+            .card h3 {
+                font-size: 1em;
+            }
+
+            .route-card {
+                padding: 25px;
+            }
+
+            .checklist-grid,
+            .finances-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .checklist-card,
+            .finance-card {
+                padding: 25px;
+            }
+
+            .lang-btn {
+                padding: 8px 12px;
+                font-size: 0.8em;
+            }
+
+            .reminder {
+                padding: 25px;
+            }
+
+            .footer {
+                padding: 30px 20px;
+            }
+
+            .footer .blessing {
+                font-size: 0.85em;
+            }
+
+            .footer .quote {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 語言切換 -->
+    <div class="language-switcher">
+        <button class="lang-btn active" onclick="setLanguage('zh')">中文</button>
+        <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+
+    <!-- 標題區 -->
+    <div class="header">
+        <h1 id="title">Victoria 全美西行</h1>
+        <p class="subtitle" id="subtitle">2025/12/19 – 2026/01/07</p>
+        <p class="route">Phoenix • Las Vegas • Grand Canyon • Page • Williams • Sedona • Palm Springs • Yosemite</p>
+    </div>
+
+    <!-- 導航 -->
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="setSection('overview')"><span class="zh">總覽</span><span class="en hidden">Overview</span></button>
+        <button class="nav-btn" onclick="setSection('itinerary')"><span class="zh">行程</span><span class="en hidden">Itinerary</span></button>
+        <button class="nav-btn" onclick="setSection('checklist')"><span class="zh">檢查清單</span><span class="en hidden">Checklist</span></button>
+        <button class="nav-btn" onclick="setSection('finances')"><span class="zh">預算</span><span class="en hidden">Budget</span></button>
+    </div>
+
+    <!-- 內容 -->
+    <div class="container">
+        <!-- 總覽 -->
+        <div id="overview" class="section active">
+            <h2><span class="zh">✨ 旅程概覽</span><span class="en hidden">✨ Trip Overview</span></h2>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-emoji">📅</div>
+                        <h3><span class="zh">旅程時長</span><span class="en hidden">Trip Duration</span></h3>
+                        <p><strong><span class="zh">19 天 20 夜</span><span class="en hidden">19 days & 20 nights</span></strong></p>
+                        <p><span class="zh">2025/12/19 – 2026/01/07</span><span class="en hidden">Dec 19, 2025 – Jan 7, 2026</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-emoji">👥</div>
+                        <h3><span class="zh">旅伴聯絡</span><span class="en hidden">Companion Contact</span></h3>
+                        <p><strong><span class="zh">李寶真</span><span class="en hidden">BAO-JHEN LI</span></strong></p>
+                        <p>📱 602-816-1163<br>📍 Phoenix, AZ 85085</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-emoji">✈️</div>
+                        <h3><span class="zh">國際航段</span><span class="en hidden">International Flights</span></h3>
+                        <p><span class="zh">去程</span><span class="en hidden">Outbound</span>: STARLUX JX010<br>
+                        <span class="zh">回程</span><span class="en hidden">Return</span>: STARLUX JX009<br>
+                        <span class="zh">轉機</span><span class="en hidden">Transfer</span>: American Airlines</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="route-card">
+                <div class="route-content">
+                    <h3 class="route-title">🗺️ <span class="zh">主要路線</span><span class="en hidden">Main Route</span></h3>
+                    <div class="route-cities">
+                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span></span>
+                        <span class="arrow">→</span>
+                        <span class="city"><span class="zh">鳳凰城</span><span class="en hidden">Phoenix</span></span>
+                        <span class="arrow">→</span>
+                        <span class="city"><span class="zh">拉斯維加斯</span><span class="en hidden">Las Vegas</span></span>
+                        <span class="arrow">→</span>
+                        <span class="city"><span class="zh">大峽谷</span><span class="en hidden">Grand Canyon</span></span>
+                        <span class="arrow">→</span>
+                        <span class="city">Page</span>
+                        <span class="arrow">→</span>
+                        <span class="city">Williams</span>
+                        <span class="arrow">→</span>
+                        <span class="city">Sedona</span>
+                        <span class="arrow">→</span>
+                        <span class="city"><span class="zh">棕櫚泉</span><span class="en hidden">Palm Springs</span></span>
+                        <span class="arrow">→</span>
+                        <span class="city">Yosemite</span>
+                        <span class="arrow">→</span>
+                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reminder">
+                <div class="reminder-icon">💡</div>
+                <div>
+                    <h4><span class="zh">重要提醒</span><span class="en hidden">Important Reminder</span></h4>
+                    <p><span class="zh">Yosemite 冬季路況可能變化，請出發前確認官方公告，安全第一！</span><span class="en hidden">Yosemite winter conditions may change. Please confirm official announcements before departure. Safety first!</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 行程 -->
+        <div id="itinerary" class="section">
+            <h2>📍 <span class="zh">Day by Day 行程</span><span class="en hidden">Day by Day Itinerary</span></h2>
+
+            <div id="itinerary-list"></div>
+        </div>
+
+        <!-- 檢查清單 -->
+        <div id="checklist" class="section">
+            <h2>✓ <span class="zh">行前檢查清單</span><span class="en hidden">Pre-Departure Checklist</span></h2>
+
+            <div class="checklist-grid" id="checklist-list"></div>
+        </div>
+
+        <!-- 預算 -->
+        <div id="finances" class="section">
+            <h2>💳 <span class="zh">預算概覽</span><span class="en hidden">Budget Overview</span></h2>
+
+            <div class="finances-grid" id="finances-list"></div>
+
+            <div class="settle-up">
+                <h4>💡 <span class="zh">分帳提醒</span><span class="en hidden">Settlement Reminder</span></h4>
+                <p><span class="zh">之後的餐廳、油錢、停車費等，可以繼續記在兩邊的表格裡，最後分帳會很方便。建議定期更新，避免遺忘！</span><span class="en hidden">Keep track of restaurants, gas, parking fees, etc. in the shared spreadsheet for convenient settlement. It's recommended to update regularly to avoid forgetting.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <div class="footer">
+        <p class="blessing">✨ <span class="zh">祝福 Victoria 與寶真有個美好的冒險！</span><span class="en hidden">Wishing Victoria & BAO-JHEN an amazing adventure!</span></p>
+        <p class="quote">From the Grand Canyon to Yosemite's snow—May every moment be extraordinary.</p>
+    </div>
+
+    <script>
+        let currentLanguage = 'zh';
+
+        // 行程數據
+        const itinerary = [
+            {
+                day: 1,
+                date: '12/19 (五)',
+                title: 'TPE → ONT → PHX',
+                details: ['20:30 - JX010 起飛 (TPE → ONT)', '15:50 - 抵達 Ontario', '20:02-22:23 - AA1666 (ONT → PHX)', '22:30+ - 與寶真會合，回 Phoenix'],
+                accommodation: '寶真家',
+                tasks: ['洗澡', '簡單超市採買', '調時差', '早點睡']
+            },
+            {
+                day: 2,
+                date: '12/20 (六)',
+                title: 'PHX → Las Vegas',
+                details: ['11:45 - Sadelle\'s Brunch (Cosmopolitan)', '14:30-16:00 - Bellagio 午休', '17:45 - Top of the World 晚餐 (Stratosphere)', '19:00 - Absinthe 秀 (Caesars Palace)'],
+                accommodation: 'Bellagio Hotel (NT$ 8,276.36)',
+                tasks: ['Vegas Boulevard 漫步', '拍夜景', '欣賞噴泉表演']
+            },
+            {
+                day: 3,
+                date: '12/21 (日)',
+                title: 'Las Vegas → PHX',
+                details: ['早上 - 飯店早餐', '10:30-12:00 - Bellagio 周邊拍照', '依機票時間返回 Phoenix'],
+                accommodation: '寶真家',
+                tasks: ['整理行李', '休息調整']
+            },
+            {
+                day: 4,
+                date: '12/22 (一)',
+                title: 'Phoenix Chill Day',
+                details: ['Costco / Target / Outlets 採買', 'Desert Botanical Garden 或 Papago Park 看夕陽', '檢查車況（胎壓、雨刷水）', '準備保暖衣物、零食、急救用品'],
+                accommodation: '寶真家',
+                tasks: ['購物', '檢查裝備', '早睡準備出發']
+            },
+            {
+                day: 5,
+                date: '12/23 (二)',
+                title: 'Phoenix 準備日',
+                details: ['補充採買清單 (REI/戶外店)', '整理 6 天 Road Trip 行李', '分類：隨身小包 + 大行李', '早睡為隔天出發做準備'],
+                accommodation: '寶真家',
+                tasks: ['行李檢查清單', '確認所有物品']
+            },
+            {
+                day: 6,
+                date: '12/24 (三)',
+                title: 'PHX → Flagstaff',
+                details: ['18:30 - TSMC Arizona 出發', '18:30-20:30 - 開車約 2 小時', 'Check-in Hampton Inn Flagstaff', '附近超市補給'],
+                accommodation: 'Hampton Inn Flagstaff (USD 294.47)',
+                tasks: ['檢查車況', '早睡準備進 Grand Canyon']
+            },
+            {
+                day: 7,
+                date: '12/25 (四)',
+                title: 'Grand Canyon 西線',
+                details: ['08:00 - Hampton Inn 出發', '09:30-10:00 - Bright Angel Trailhead', '10:00+ - 園區 Shuttle (西線)', '13:30-16:00 - Hermit Trailhead 輕健行', '18:00-19:00 - Fat Olives 晚餐'],
+                accommodation: 'Hampton Inn Flagstaff',
+                tasks: ['步道拍照', '日落觀景', '準備相機']
+            },
+            {
+                day: 8,
+                date: '12/26 (五)',
+                title: 'Grand Canyon 東線 → Page',
+                details: ['09:30 - Flagstaff 出發', '09:30-10:50 - Drigo\'s Brunch', '多個停靠點：Mather Point, Yavapai, Desert View', '14:50-16:20 - 馬蹄灣 (1.5h 車程)', '16:20-17:30 - Horseshoe Bend 步道'],
+                accommodation: 'Country Inn & Suites, Page (USD 305.12)',
+                tasks: ['馬蹄灣日出/日落拍照', '湖景觀賞']
+            },
+            {
+                day: 9,
+                date: '12/27 (六)',
+                title: 'Page 羚羊峽谷',
+                details: ['10:00-10:15 - 飯店 → Antelope Canyon', '10:30-12:30 - 羚羊峽谷導覽 (2h)', '13:00-14:00 - Hanging Garden Trailhead', '14:15-14:45 - Wahweap Overlook (Lake Powell 俯瞰)', '15:00+ - 回飯店自由活動'],
+                accommodation: 'Country Inn & Suites, Page',
+                tasks: ['專業導遊陪同', '攝影機會多', '下午休息']
+            },
+            {
+                day: 10,
+                date: '12/28 (日)',
+                title: 'Bearizona → Polar Express',
+                details: ['10:00 - Page 出發', '12:40-16:00 - Bearizona Wildlife Park (3.5h)', '16:00-16:10 - 前往 Williams Depot', '18:30-20:00 - Polar Express Train Ride'],
+                accommodation: 'Days Inn by Wyndham Williams (USD 174.98)',
+                tasks: ['自駕動物園', '欣賞聖誕氛圍火車']
+            },
+            {
+                day: 11,
+                date: '12/29 (一)',
+                title: 'Williams → Sedona → PHX',
+                details: ['11:00 - Days Inn 出發', '12:10-14:00 - Uptown Sedona 漫步 + 午餐', '14:00-16:00 - Tlaquepaque Arts & Shopping', '16:00-17:30 - Sedona 景觀餐廳晚餐', '17:30-19:30 - 返回 Phoenix (避開尖峰車流)'],
+                accommodation: '寶真家',
+                tasks: ['藝術村逛街', '紅岩日落拍照', '完成 Road Trip']
+            },
+            {
+                day: 12,
+                date: '12/30 (二)',
+                title: 'Phoenix Free Day',
+                details: ['洗衣、整理照片、備份記憶卡', '市區隨意散步', '咖啡廳耍廢', '補買任何戶外/保暖裝備 (REI)'],
+                accommodation: '寶真家',
+                tasks: ['全身放空', '整理記憶卡', '休息充電']
+            },
+            {
+                day: 13,
+                date: '12/31 (三)',
+                title: 'PHX 檢查日 & 跨年',
+                details: ['車況全面檢查：機油、輪胎、備胎、雨刷', 'AutoZone/O\'Reilly 購買雪鏈', '在平地試裝雪鏈一次', '準備 Yosemite 糧食', '視體力簡單吃跨年飯'],
+                accommodation: '寶真家',
+                tasks: ['車況檢查清單', '裝雪鏈演習', '跨年慶祝']
+            },
+            {
+                day: 14,
+                date: '01/01 (四)',
+                title: 'PHX → Palm Springs',
+                details: ['09:00-10:00 出發', '行車時間：約 4.5 小時', 'Check-in Palm Springs 飯店', '泳池放鬆 + 市區散步', 'Downtown 步行區 / Palm Canyon Drive'],
+                accommodation: 'Hilton/Renaissance/Courtyard Palm Springs',
+                tasks: ['放鬆身心', '享受溫暖天氣', '自由安排']
+            },
+            {
+                day: 15,
+                date: '01/02 (五)',
+                title: 'Palm Springs → Fresno',
+                details: ['09:00-10:00 出發', '中途停靠：Cabazon Dinosaurs (30min 拍照)', '可選：Desert Hills Premium Outlets (1-2h)', '傍晚抵達 Fresno', 'Check-in 後早睡，為上山準備'],
+                accommodation: 'Fresno 飯店',
+                tasks: ['購物 / 拍照', '補充零食水', '早睡養精蓄銳']
+            },
+            {
+                day: 16,
+                date: '01/03 (六)',
+                title: 'Fresno → Yosemite Valley',
+                details: ['09:00-10:00 出發', '1.5-2h 車程抵達 Yosemite', 'Tunnel View - 必拍大景', 'Bridalveil Fall Trail - 短步道', 'Visitor Center + Village', 'El Capitan Meadow - 看攀岩者'],
+                accommodation: 'El Portal/Fish Camp/Oakhurst 園外',
+                tasks: ['檢查雪鏈', '油量 1/2 以上', '熟悉山谷']
+            },
+            {
+                day: 17,
+                date: '01/04 (日)',
+                title: 'Yosemite 深度遊',
+                details: ['Lower Yosemite Fall Trail - 必走', 'Sentinel Bridge - 下午 Half Dome 倒影', 'Curry Village → Mirror Lake - 雪景散步', '若 Badger Pass 開放：可玩雪橇/雪鞋', '若封閉：多走短步道 + 拍雪景'],
+                accommodation: '同前',
+                tasks: ['查詢 NPS 路況', '備好雪鏈', '早睡準備長途']
+            },
+            {
+                day: 18,
+                date: '01/05 (一)',
+                title: 'Yosemite → PHX',
+                details: ['08:00 - 住宿地出發下山', '08:00-12:30 - Yosemite → Bakersfield (4.5h)', '12:30-14:00 - Bakersfield 午餐 + 加油 + 休息', '14:00-20:00 - Bakersfield → Phoenix (6h)', '每 2-2.5h 停一次休息', '約 20:00-21:00 抵達 PHX'],
+                accommodation: '寶真家',
+                tasks: ['洗澡', '簡單收拾', '準備隔日回台']
+            },
+            {
+                day: 19,
+                date: '01/05 (一)',
+                title: 'PHX → TPE',
+                details: ['早上 - 最後行李收拾', '確認護照、機票、現金', '12:00-13:00 - 簡單午餐 + 道別', '15:00 - 出發前往 PHX 機場', '17:50-18:07 - AA1666 (PHX → ONT)', '21:45-01/07 04:30 - JX009 (ONT → TPE)'],
+                accommodation: '回台灣',
+                tasks: ['最後檢查', '道別', '啟程回家']
+            }
+        ];
+
+        // 檢查清單數據
+        const checklist = [
+            {
+                section: '一、證件 & 重要文件',
+                icon: '📄',
+                items: ['護照（效期 ≥ 6 個月）', 'ESTA（確認有效 / 重新申請）', '美國簽證（若有）', '行程 PDF / 機票 PDF（手機＋雲端）', '住宿訂單（Bellagio、Page、Williams、Yosemite）', '旅遊保險（電子保單）', '國際駕照 + 台灣駕照', '信用卡（AMEX＋VISA/Master 各一張）', '台灣門號：開漫遊 or eSIM']
+            },
+            {
+                section: '二、金錢 / 支付',
+                icon: '💳',
+                items: ['美金現鈔（建議 USD 200–400）', '信用卡國外刷卡已通知銀行', 'Apple Pay / Google Pay 設定好', '筆記：誰先付什麼（Victoria / BAO-JHEN LI）', '預留：秀票小費、餐廳小費、停車費、油錢']
+            },
+            {
+                section: '三、衣物（冬季適用）',
+                icon: '🎒',
+                items: ['羽絨外套（厚）', '登山保暖外套（中）', '長袖內搭（HEATTECH 或保暖衣）', '長褲 3–4 件（牛仔＋保暖）', '帽子 / 手套 / 圍巾（Yosemite 必備）', '雪地鞋 or 防滑鞋', '襪子（保暖款＋替換多帶）', '室內輕便衣服（Phoenix 舒服穿）']
+            },
+            {
+                section: '四、美容 / 個人用品',
+                icon: '✨',
+                items: ['隱形眼鏡 / 眼鏡', '日常保養品（少量分裝）', '化妝品＋卸妝用品', '防曬（雪地反光很強）', '身體乳（美國乾燥）', '止汗、護唇膏、濕紙巾']
+            },
+            {
+                section: '五、自駕必備（Yosemite & Grand Canyon）',
+                icon: '🚗',
+                items: ['雪鏈（chains）已買好＋試裝', '輪胎胎壓 OK', '機油 / 水箱水 / 雨刷水', '路線離線地圖下載（Google Maps Offline）', '車上：水、零食、保暖毯、手機充電線', '行車紀錄器（如有）']
+            },
+            {
+                section: '六、手機必備 App',
+                icon: '📱',
+                items: ['Google Maps / Waze', 'NPS（美國國家公園路況）', 'Airbnb / Hotels.com / Booking.com', 'Uber / Lyft', 'Yelp（餐廳評價）', 'Instagram（拍照打卡）', 'AccuWeather（天氣預報）']
+            },
+            {
+                section: '七、醫藥 / 緊急用品',
+                icon: '⚕️',
+                items: ['止痛藥（Advil / Panadol）', '暈車藥', '腸胃藥', '熱敷包（冬季車上必備）', '維他命 C / D', '皮膚過敏藥膏', '小型急救包']
+            },
+            {
+                section: '八、Yosemite 冬季特別提醒',
+                icon: '❄️',
+                items: ['1 月初路況不穩，每天查看 R1 / R2 / 鎖鏈規定', '地面結冰，鞋底一定要防滑', '雪鏈放在後車廂容易拿到', '陽光反射雪面很強，墨鏡一定要帶', '電子設備在低溫掉電快，行動電源多準備']
+            }
+        ];
+
+        // 預算數據
+        const finances = [
+            {
+                who: 'Victoria 先付',
+                items: [
+                    { name: 'Bellagio Hotel', amount: 'NT$ 8,276.36' },
+                    { name: 'Top of the World 窗邊座位費', amount: 'USD 54' },
+                    { name: 'Sadelle\'s Brunch (信用卡預授權)', amount: 'No-Show 會收 USD 25' }
+                ]
+            },
+            {
+                who: '寶真（BAO-JHEN LI）先付',
+                items: [
+                    { name: 'PHX ↔ LAS 機票（2人）', amount: 'USD 677.9' },
+                    { name: 'Absinthe 秀（2人）', amount: 'USD 429.36' },
+                    { name: 'Hampton Inn Flagstaff', amount: 'USD 294.47' },
+                    { name: 'Country Inn & Suites, Page', amount: 'USD 305.12' },
+                    { name: 'Days Inn by Wyndham Williams', amount: 'USD 174.98' },
+                    { name: 'Polar Express Train Ride', amount: 'USD 161.16' },
+                    { name: '羚羊峽谷行程（2人）', amount: 'TWD 4,698' }
+                ]
+            }
+        ];
+
+        // 設置語言
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.zh, .en').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.' + lang).forEach(el => {
+                el.classList.remove('hidden');
+            });
+        }
+
+        // 設置部分
+        function setSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 初始化行程
+        function initItinerary() {
+            const list = document.getElementById('itinerary-list');
+            itinerary.forEach((day, idx) => {
+                const card = document.createElement('div');
+                card.className = 'itinerary-card';
+                card.innerHTML = `
+                    <div class="itinerary-header" onclick="toggleItinerary(${idx})">
+                        <div>
+                            <h3>Day ${day.day} | ${day.date}</h3>
+                            <p>${day.title}</p>
+                        </div>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="itinerary-content" id="itinerary-${idx}">
+                        <div class="itinerary-section">
+                            <h4>⏰ <span class="zh">時程</span><span class="en hidden">Schedule</span></h4>
+                            <ul>
+                                ${day.details.map(d => `<li>${d}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="itinerary-section">
+                            <h4>🏨 <span class="zh">住宿</span><span class="en hidden">Accommodation</span></h4>
+                            <ul><li>${day.accommodation}</li></ul>
+                        </div>
+                        ${day.tasks ? `<div class="itinerary-section">
+                            <h4>✓ <span class="zh">任務提醒</span><span class="en hidden">Task Reminders</span></h4>
+                            <div class="task-tags">
+                                ${day.tasks.map(t => `<span class="task-tag">${t}</span>`).join('')}
+                            </div>
+                        </div>` : ''}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function toggleItinerary(idx) {
+            const header = document.querySelector(`#itinerary-${idx}`).previousElementSibling;
+            const content = document.getElementById(`itinerary-${idx}`);
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
+        // 初始化檢查清單
+        function initChecklist() {
+            const list = document.getElementById('checklist-list');
+            checklist.forEach(section => {
+                const card = document.createElement('div');
+                card.className = 'checklist-card';
+                card.innerHTML = `
+                    <h3>${section.icon} ${section.section}</h3>
+                    <div class="checklist-items">
+                        ${section.items.map((item, i) => `
+                            <div class="checklist-item">
+                                <input type="checkbox" id="check-${i}">
+                                <label for="check-${i}">${item}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // 初始化預算
+        function initFinances() {
+            const list = document.getElementById('finances-list');
+            finances.forEach(section => {
+                const card = document.createElement('div');
+                card.className = 'finance-card';
+                card.innerHTML = `
+                    <h3>${section.who}</h3>
+                    <div class="finance-items">
+                        ${section.items.map(item => `
+                            <div class="finance-item">
+                                <span class="name">${item.name}</span>
+                                <span class="amount">${item.amount}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initItinerary();
+            initChecklist();
+            initFinances();
+        });
+    </script>
+</body>
+</html>
