@@ -519,8 +519,81 @@
             line-height: 1.5;
         }
 
-        /* 預算 */
-        .finances-grid {
+        /* 航班資訊 */
+        .flight-section {
+            background-color: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.1);
+            margin-bottom: 40px;
+            border: 1px solid rgba(155, 139, 126, 0.15);
+        }
+
+        .flight-section h3 {
+            font-size: 1.4em;
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+        }
+
+        .flight-info {
+            margin-bottom: 20px;
+        }
+
+        .flight-info p {
+            margin: 10px 0;
+            color: var(--text);
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .flight-info strong {
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .flight-detail-label {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1em;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .divider {
+            border-top: 2px solid var(--accent);
+            margin: 30px 0;
+        }
+
+        /* 響應式 - 平板 */
+        @media (max-width: 1024px) {
+            .flight-section {
+                padding: 35px;
+            }
+
+            .flight-section h3 {
+                font-size: 1.2em;
+            }
+        }
+
+        /* 響應式 - 手機 */
+        @media (max-width: 768px) {
+            .flight-section {
+                padding: 25px;
+            }
+
+            .flight-section h3 {
+                font-size: 1em;
+            }
+
+            .flight-info p {
+                font-size: 0.9em;
+            }
+        }
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 35px;
@@ -776,14 +849,17 @@
 
     <!-- 標題區 -->
     <div class="header">
-        <h1 id="title">Victoria 全美西行</h1>
+        <h1 id="title">Victoria & Joy 全美西行</h1>
         <p class="subtitle" id="subtitle">2025/12/19 – 2026/01/07</p>
-        <p class="route">Phoenix • Las Vegas • Grand Canyon • Page • Williams • Sedona • Palm Springs • Yosemite</p>
+        <p class="route">
+            Taipei • Phoenix • Las Vegas • Grand Canyon • Page • Williams • Sedona • Palm Springs • Yosemite • Taipei
+        </p>
     </div>
 
     <!-- 導航 -->
     <div class="nav-tabs">
         <button class="nav-btn active" onclick="setSection('overview')"><span class="zh">總覽</span><span class="en hidden">Overview</span></button>
+        <button class="nav-btn" onclick="setSection('flights')"><span class="zh">航班</span><span class="en hidden">Flights</span></button>
         <button class="nav-btn" onclick="setSection('itinerary')"><span class="zh">行程</span><span class="en hidden">Itinerary</span></button>
         <button class="nav-btn" onclick="setSection('checklist')"><span class="zh">檢查清單</span><span class="en hidden">Checklist</span></button>
         <button class="nav-btn" onclick="setSection('finances')"><span class="zh">預算</span><span class="en hidden">Budget</span></button>
@@ -814,13 +890,16 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card" onclick="setSection('flights')" style="cursor: pointer;">
                     <div class="card-content">
                         <div class="card-emoji">✈️</div>
                         <h3><span class="zh">國際航段</span><span class="en hidden">International Flights</span></h3>
                         <p><span class="zh">去程</span><span class="en hidden">Outbound</span>: STARLUX JX010<br>
                         <span class="zh">回程</span><span class="en hidden">Return</span>: STARLUX JX009<br>
                         <span class="zh">轉機</span><span class="en hidden">Transfer</span>: American Airlines</p>
+                        <p style="margin-top: 15px; color: var(--primary); font-weight: 600; font-size: 0.9em;">
+                            <span class="zh">點擊查看詳細資訊 →</span><span class="en hidden">Click for details →</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -829,25 +908,25 @@
                 <div class="route-content">
                     <h3 class="route-title">🗺️ <span class="zh">主要路線</span><span class="en hidden">Main Route</span></h3>
                     <div class="route-cities">
-                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span></span>
+                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span> <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">出發點</span><span class="en hidden">Start</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city"><span class="zh">鳳凰城</span><span class="en hidden">Phoenix</span></span>
+                        <span class="city">Phoenix <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">鳳凰城</span><span class="en hidden">Phoenix</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city"><span class="zh">拉斯維加斯</span><span class="en hidden">Las Vegas</span></span>
+                        <span class="city">Las Vegas <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">拉斯維加斯</span><span class="en hidden">Las Vegas</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city"><span class="zh">大峽谷</span><span class="en hidden">Grand Canyon</span></span>
+                        <span class="city">Grand Canyon <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">大峽谷</span><span class="en hidden">Grand Canyon</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city">Page</span>
+                        <span class="city">Page <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">羚羊峽谷</span><span class="en hidden">Antelope Canyon</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city">Williams</span>
+                        <span class="city">Williams <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">聖誕小鎮</span><span class="en hidden">Christmas Town</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city">Sedona</span>
+                        <span class="city">Sedona <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">紅岩藝術小鎮</span><span class="en hidden">Red Rock Arts Town</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city"><span class="zh">棕櫚泉</span><span class="en hidden">Palm Springs</span></span>
+                        <span class="city">Palm Springs <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">棕櫚泉</span><span class="en hidden">Palm Springs</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city">Yosemite</span>
+                        <span class="city">Yosemite <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">優勝美地</span><span class="en hidden">Yosemite</span>)</span></span>
                         <span class="arrow">→</span>
-                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span></span>
+                        <span class="city"><span class="zh">台北</span><span class="en hidden">Taipei</span> <span style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">回程</span><span class="en hidden">Return</span>)</span></span>
                     </div>
                 </div>
             </div>
@@ -861,7 +940,67 @@
             </div>
         </div>
 
-        <!-- 行程 -->
+        <!-- 航班 -->
+        <div id="flights" class="section">
+            <h2>✈️ <span class="zh">國際航班資訊</span><span class="en hidden">International Flight Information</span></h2>
+
+            <!-- 去程 -->
+            <div class="flight-section">
+                <h3><span class="zh">✈️ 去程（TPE → PHX）</span><span class="en hidden">✈️ Outbound (TPE → PHX)</span></h3>
+                
+                <p class="flight-detail-label"><span class="zh">📅 2025/12/19（五）</span><span class="en hidden">📅 Dec 19, 2025 (Fri)</span></p>
+                
+                <div class="flight-info">
+                    <p><span class="zh">✔️ 🇹🇼 16:00 機場接送 → 桃園機場第二航廈</span><span class="en hidden">✔️ 🇹🇼 16:00 Airport transfer → Taoyuan Airport Terminal 2</span></p>
+                </div>
+
+                <div class="flight-info">
+                    <p><strong><span class="zh">🛫 JX010 星宇航空</span><span class="en hidden">🛫 JX010 STARLUX AIRLINES</span></strong></p>
+                    <p><span class="zh">20:30 起飛（TPE 桃園） → ✈️ 11小時20分 → 🛬 15:50 抵達 ONT 安大略國際機場 Terminal INTL</span><span class="en hidden">20:30 Depart (TPE Taipei) → ✈️ 11h 20mins → 🛬 15:50 Arrive ONT Ontario Intl Airport Terminal INTL</span></p>
+                    <p style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">台灣時間：12月20日早上07:50</span><span class="en hidden">Taiwan Time: Dec 20 07:50 AM</span>)</p>
+                </div>
+
+                <div class="flight-info">
+                    <p><span class="zh">⏳ 轉機時間：4小時12分</span><span class="en hidden">⏳ Transit time: 4h 12mins</span></p>
+                </div>
+
+                <div class="flight-info">
+                    <p><strong><span class="zh">🛫 AA1666 美國航空</span><span class="en hidden">🛫 AA1666 AMERICAN AIRLINES</span></strong></p>
+                    <p><span class="zh">20:02 起飛（ONT 安大略 T4） → ✈️ 1小時21分 → 🛬 22:23 抵達 PHX 鳳凰城國際機場 Terminal 4</span><span class="en hidden">20:02 Depart (ONT Ontario T4) → ✈️ 1h 21mins → 🛬 22:23 Arrive PHX Phoenix Intl Airport Terminal 4</span></p>
+                    <p style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">台灣時間：12月20日14:23</span><span class="en hidden">Taiwan Time: Dec 20 14:23</span>)</p>
+                </div>
+
+                <div class="flight-info">
+                    <p><span class="zh">🚗 寶真來機場接機</span><span class="en hidden">🚗 BAO-JHEN picks up from airport</span></p>
+                </div>
+            </div>
+
+            <!-- 回程 -->
+            <div class="flight-section">
+                <h3><span class="zh">✈️ 回程（PHX → TPE）</span><span class="en hidden">✈️ Return (PHX → TPE)</span></h3>
+                
+                <p class="flight-detail-label"><span class="zh">📅 2026/01/05（一）</span><span class="en hidden">📅 Jan 5, 2026 (Mon)</span></p>
+                
+                <div class="flight-info">
+                    <p><span class="zh">✔️ 🇺🇸 15:00 出發前往鳳凰城機場</span><span class="en hidden">✔️ 🇺🇸 15:00 Depart to Phoenix Airport</span></p>
+                </div>
+
+                <div class="flight-info">
+                    <p><strong><span class="zh">🛫 AA1666 美國航空</span><span class="en hidden">🛫 AA1666 AMERICAN AIRLINES</span></strong></p>
+                    <p><span class="zh">17:50 起飛（PHX 鳳凰城 T4） → ✈️ 1小時17分 → 🛬 18:07 抵達 ONT 安大略 T4</span><span class="en hidden">17:50 Depart (PHX Phoenix T4) → ✈️ 1h 17mins → 🛬 18:07 Arrive ONT Ontario T4</span></p>
+                    <p style="font-size: 0.85em; color: var(--secondary);">(<span class="zh">台灣時間：1月6日早上10:07</span><span class="en hidden">Taiwan Time: Jan 6 10:07 AM</span>)</p>
+                </div>
+
+                <div class="flight-info">
+                    <p><span class="zh">⏳ 轉機時間：3小時38分</span><span class="en hidden">⏳ Transit time: 3h 38mins</span></p>
+                </div>
+
+                <div class="flight-info">
+                    <p><strong><span class="zh">🛫 JX009 星宇航空</span><span class="en hidden">🛫 JX009 STARLUX AIRLINES</span></strong></p>
+                    <p><span class="zh">21:45 起飛（ONT 安大略 T4） → ✈️ 14小時45分 → 🛬 2026/01/07 04:30 抵達 TPE 桃園機場第二航廈</span><span class="en hidden">21:45 Depart (ONT Ontario T4) → ✈️ 14h 45mins → 🛬 2026/01/07 04:30 Arrive TPE Taoyuan Airport Terminal 2</span></p>
+                </div>
+            </div>
+        </div>
         <div id="itinerary" class="section">
             <h2>📍 <span class="zh">Day by Day 行程</span><span class="en hidden">Day by Day Itinerary</span></h2>
 
@@ -891,7 +1030,7 @@
     <!-- 頁尾 -->
     <div class="footer">
         <p class="blessing">✨ <span class="zh">祝福 Victoria 與寶真有個美好的冒險！</span><span class="en hidden">Wishing Victoria & BAO-JHEN an amazing adventure!</span></p>
-        <p class="quote">From the Grand Canyon to Yosemite's snow—May every moment be extraordinary.</p>
+        <p class="quote"><span class="zh">© Victoria 2025</span><span class="en hidden">© Victoria 2025</span></p>
     </div>
 
     <script>
