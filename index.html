@@ -519,8 +519,302 @@
             line-height: 1.5;
         }
 
-        /* 航班資訊 */
-        .flight-section {
+        /* 航班資訊卡片 */
+        .flight-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .flight-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flight-card-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .flight-card-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flight-city {
+            text-align: center;
+        }
+
+        .flight-city-code {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .flight-city-name {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .flight-route {
+            text-align: center;
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 0;
+        }
+
+        .flight-duration {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .flight-arrow {
+            font-size: 1.5em;
+            margin: 8px 0;
+        }
+
+        .flight-time {
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .flight-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flight-detail-item {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .flight-detail-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .flight-detail-value {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .international-total {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--warm) 100%);
+            color: var(--dark);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.15);
+        }
+
+        .international-total h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.2em;
+            color: var(--dark);
+        }
+
+        .total-amount {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .total-note {
+            font-size: 0.95em;
+            color: var(--secondary);
+        }
+
+        /* 響應式 - 平板 */
+        @media (max-width: 1024px) {
+            .flight-card-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .total-amount {
+                font-size: 2em;
+            }
+        }
+
+        /* 響應式 - 手機 */
+        @media (max-width: 768px) {
+            .flight-card {
+                padding: 20px;
+            }
+
+            .flight-card-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .flight-card-header h3 {
+                font-size: 1.1em;
+            }
+
+            .flight-card-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .flight-details {
+                grid-template-columns: 1fr;
+            }
+
+            .total-amount {
+                font-size: 1.8em;
+            }
+        }
+            background-color: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(155, 139, 126, 0.1);
+            margin-bottom: 40px;
+            border: 1px solid rgba(155, 139, 126, 0.15);
+        }
+
+        .hotel-ticket-section h3 {
+            font-size: 1.3em;
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 15px;
+        }
+
+        .hotel-list,
+        .ticket-list {
+            display: grid;
+            gap: 25px;
+        }
+
+        .hotel-item,
+        .ticket-item {
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .hotel-item h4,
+        .ticket-item h4 {
+            font-size: 1.1em;
+            color: var(--dark);
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+
+        .hotel-details,
+        .ticket-details {
+            display: grid;
+            gap: 10px;
+        }
+
+        .hotel-details p,
+        .ticket-details p {
+            margin: 8px 0;
+            color: var(--text);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .confirmation-code {
+            background-color: white;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .note {
+            background-color: #FFF9E6;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #FFB81C;
+            margin-top: 20px;
+        }
+
+        .note p {
+            margin: 8px 0;
+            color: var(--text);
+            font-size: 0.95em;
+        }
+
+        /* 響應式 - 平板 */
+        @media (max-width: 1024px) {
+            .hotel-ticket-section {
+                padding: 35px;
+            }
+
+            .hotel-ticket-section h3 {
+                font-size: 1.2em;
+            }
+        }
+
+        /* 響應式 - 手機 */
+        @media (max-width: 768px) {
+            .hotel-ticket-section {
+                padding: 25px;
+            }
+
+            .hotel-ticket-section h3 {
+                font-size: 1.05em;
+            }
+
+            .hotel-item,
+            .ticket-item {
+                padding: 15px;
+            }
+
+            .hotel-details p,
+            .ticket-details p {
+                font-size: 0.9em;
+            }
+        }
             background-color: white;
             padding: 45px;
             border-radius: 12px;
@@ -859,8 +1153,9 @@
     <!-- 導航 -->
     <div class="nav-tabs">
         <button class="nav-btn active" onclick="setSection('overview')"><span class="zh">總覽</span><span class="en hidden">Overview</span></button>
-        <button class="nav-btn" onclick="setSection('flights')"><span class="zh">航班</span><span class="en hidden">Flights</span></button>
         <button class="nav-btn" onclick="setSection('itinerary')"><span class="zh">行程</span><span class="en hidden">Itinerary</span></button>
+        <button class="nav-btn" onclick="setSection('flights')"><span class="zh">航班</span><span class="en hidden">Flights</span></button>
+        <button class="nav-btn" onclick="setSection('hotels')"><span class="zh">飯店/票券</span><span class="en hidden">Hotels & Tickets</span></button>
         <button class="nav-btn" onclick="setSection('checklist')"><span class="zh">檢查清單</span><span class="en hidden">Checklist</span></button>
         <button class="nav-btn" onclick="setSection('finances')"><span class="zh">預算</span><span class="en hidden">Budget</span></button>
     </div>
@@ -942,7 +1237,12 @@
 
         <!-- 航班 -->
         <div id="flights" class="section">
-            <h2>✈️ <span class="zh">國際航班資訊</span><span class="en hidden">International Flight Information</span></h2>
+            <h2>✈️ <span class="zh">航班資訊</span><span class="en hidden">Flight Information</span></h2>
+
+            <!-- 國際航班 -->
+            <div class="flight-section">
+                <h3>✈️ <span class="zh">國際航班</span><span class="en hidden">International Flights</span></h3>
+            </div>
 
             <!-- 去程 -->
             <div class="flight-section">
@@ -971,7 +1271,7 @@
                 </div>
 
                 <div class="flight-info">
-                    <p><span class="zh">🚗 寶真來機場接機</span><span class="en hidden">🚗 BAO-JHEN picks up from airport</span></p>
+                    <p><span class="zh">🚗 李寶真 來機場接機</span><span class="en hidden">🚗 BAO-JHEN LI picks up from airport</span></p>
                 </div>
             </div>
 
@@ -999,10 +1299,183 @@
                     <p><strong><span class="zh">🛫 JX009 星宇航空</span><span class="en hidden">🛫 JX009 STARLUX AIRLINES</span></strong></p>
                     <p><span class="zh">21:45 起飛（ONT 安大略 T4） → ✈️ 14小時45分 → 🛬 2026/01/07 04:30 抵達 TPE 桃園機場第二航廈</span><span class="en hidden">21:45 Depart (ONT Ontario T4) → ✈️ 14h 45mins → 🛬 2026/01/07 04:30 Arrive TPE Taoyuan Airport Terminal 2</span></p>
                 </div>
+
+                <!-- 國際航班總額 -->
+                <div class="flight-section" style="margin-top: 25px; background-color: var(--light); padding: 25px; border-radius: 8px;">
+                    <h3 style="margin-top: 0;"><span class="zh">💰 國際航班總額</span><span class="en hidden">💰 International Flight Total</span></h3>
+                    <div class="flight-info">
+                        <p><strong style="font-size: 1.2em; color: var(--primary);">TWD 25,758</strong></p>
+                        <p style="font-size: 0.9em; color: var(--secondary);"><span class="zh">來回（1人）</span><span class="en hidden">Round trip (1 person)</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 內陸航班 -->
+            <div class="flight-section">
+                <h3>✈️ <span class="zh">內陸航班（Southwest：Phoenix ⇄ Las Vegas）</span><span class="en hidden">Domestic Flight (Southwest: Phoenix ⇄ Las Vegas)</span></h3>
+                
+                <div class="flight-info">
+                    <p><strong><span class="zh">Trip：Phoenix to Las Vegas（2 passengers）</span><span class="en hidden">Trip: Phoenix to Las Vegas (2 passengers)</span></strong></p>
+                    <p><span class="zh">確認號</span><span class="en hidden">Confirmation #</span>: <strong>AWQX6Y</strong></p>
+                </div>
+
+                <!-- 去程 -->
+                <div class="flight-info">
+                    <p style="border-bottom: 2px solid var(--accent); padding-bottom: 15px;"><strong><span class="zh">去程</span><span class="en hidden">Outbound</span> | Sat, Dec 20, 2025</strong></p>
+                    <p>✈️ <span class="zh">班次</span><span class="en hidden">Flight #</span> 4414（Boeing 737-700）</p>
+                    <p>📍 PHX 09:50 → LAS 10:10（<span class="zh">直飛</span><span class="en hidden">Nonstop</span> 1h20）</p>
+                </div>
+
+                <!-- 回程 -->
+                <div class="flight-info">
+                    <p style="border-bottom: 2px solid var(--accent); padding-bottom: 15px;"><strong><span class="zh">回程</span><span class="en hidden">Return</span> | Sun, Dec 21, 2025</strong></p>
+                    <p>✈️ <span class="zh">班次</span><span class="en hidden">Flight #</span> 2146（Boeing 737-800）</p>
+                    <p>📍 LAS 17:35 → PHX 19:50（<span class="zh">直飛</span><span class="en hidden">Nonstop</span> 1h15）</p>
+                </div>
+
+                <!-- 票價 -->
+                <div class="flight-info" style="background-color: var(--light); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="margin-bottom: 15px;"><strong><span class="zh">💵 票價</span><span class="en hidden">💵 Price</span></strong></p>
+                    <p><span class="zh">每人 Total：</span><span class="en hidden">Per person Total: </span><strong style="color: var(--primary); font-size: 1.1em;">US$338.95</strong></p>
+                    <p><span class="zh">兩人合計：</span><span class="en hidden">2 passengers total: </span><strong style="color: var(--primary); font-size: 1.1em;">US$677.90</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 飯店/票券 -->
+        <div id="hotels" class="section">
+            <h2>🏨 <span class="zh">飯店 & 票券資訊</span><span class="en hidden">Hotels & Tickets Information</span></h2>
+
+            <!-- 已確認飯店 -->
+            <div class="hotel-ticket-section">
+                <h3>🏨 <span class="zh">已確認飯店</span><span class="en hidden">Confirmed Hotels</span></h3>
+                
+                <div class="hotel-list">
+                    <!-- Hotel 1: Las Vegas -->
+                    <div class="hotel-item">
+                        <h4>1. Las Vegas｜Bellagio Hotel（1 <span class="zh">晚</span><span class="en hidden">night</span>）</h4>
+                        <div class="hotel-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/20–12/21</p>
+                            <p><span class="detail-label"><span class="zh">房價</span><span class="en hidden">Price</span>:</span> NT$ 8,276.36（Victoria <span class="zh">先付</span><span class="en hidden">paid</span>）</p>
+                        </div>
+                    </div>
+
+                    <!-- Hotel 2: Flagstaff -->
+                    <div class="hotel-item">
+                        <h4>2. Flagstaff｜Hampton Inn & Suites Flagstaff（2 <span class="zh">晚</span><span class="en hidden">nights</span>）</h4>
+                        <div class="hotel-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/23–12/25</p>
+                            <p><span class="detail-label"><span class="zh">總價</span><span class="en hidden">Total</span>:</span> TWD 8,218 + <span class="zh">稅</span><span class="en hidden">tax</span> 919</p>
+                            <p><span class="detail-label"><span class="zh">房型</span><span class="en hidden">Room Type</span>:</span> <span class="zh">帶 2 張大床、禁菸</span><span class="en hidden">2 Queen beds, Non-smoking</span></p>
+                            <div class="confirmation-code">
+                                <span class="detail-label"><span class="zh">確認碼</span><span class="en hidden">Confirmation #</span>:</span> 6385890560
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hotel 3: Page -->
+                    <div class="hotel-item">
+                        <h4>3. Page｜Country Inn & Suites by Radisson, Page, AZ（2 <span class="zh">晚</span><span class="en hidden">nights</span>）</h4>
+                        <div class="hotel-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/25–12/27</p>
+                            <p><span class="detail-label"><span class="zh">總價</span><span class="en hidden">Total</span>:</span> TWD 9,400 + <span class="zh">稅</span><span class="en hidden">tax</span> 1,589</p>
+                            <p><span class="detail-label"><span class="zh">房型</span><span class="en hidden">Room Type</span>:</span> <span class="zh">特大雙人床房－無障礙空間／禁菸</span><span class="en hidden">King bed – ADA/Non-smoking</span></p>
+                            <div class="confirmation-code">
+                                <span class="detail-label"><span class="zh">確認碼</span><span class="en hidden">Confirmation #</span>:</span> 6501081506
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hotel 4: Williams -->
+                    <div class="hotel-item">
+                        <h4>4. Williams｜Days Inn by Wyndham Williams（威廉姆斯戴斯酒店）（1 <span class="zh">晚</span><span class="en hidden">night</span>）</h4>
+                        <div class="hotel-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/27–12/28</p>
+                            <p><span class="detail-label"><span class="zh">總價</span><span class="en hidden">Total</span>:</span> TWD 4,605 + <span class="zh">稅</span><span class="en hidden">tax</span> 824</p>
+                            <p><span class="detail-label"><span class="zh">房型</span><span class="en hidden">Room Type</span>:</span> <span class="zh">加大雙人床房－附 2 張加大雙人床－禁菸</span><span class="en hidden">2 Queen beds – Non-smoking</span></p>
+                            <div class="confirmation-code">
+                                <span class="detail-label"><span class="zh">確認碼</span><span class="en hidden">Confirmation #</span>:</span> 6356477849
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <p><span class="zh">ℹ️ 其餘日期皆住 Joy 家，不需訂房。</span><span class="en hidden">ℹ️ Other dates stay at Joy's home, no room booking needed.</span></p>
+                </div>
+            </div>
+
+            <!-- 已確認活動/票券 -->
+            <div class="hotel-ticket-section">
+                <h3>🎟️ <span class="zh">已確認活動／票券</span><span class="en hidden">Confirmed Activities / Tickets</span></h3>
+                
+                <div class="ticket-list">
+                    <!-- Ticket 1: Sadelle's -->
+                    <div class="ticket-item">
+                        <h4>1. Sadelle's Brunch – The Cosmopolitan（Vegas）</h4>
+                        <div class="ticket-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/20 Sat 11:45，2 <span class="zh">位</span><span class="en hidden">pax</span></p>
+                            <p><span class="detail-label"><span class="zh">備註</span><span class="en hidden">Note</span>:</span> Victoria <span class="zh">已授權信用卡，No-Show 扣</span><span class="en hidden">authorized credit card, No-Show charges</span> US$25</p>
+                        </div>
+                    </div>
+
+                    <!-- Ticket 2: Top of the World -->
+                    <div class="ticket-item">
+                        <h4>2. Top of the World – Stratosphere Tower <span class="zh">高空晚餐</span><span class="en hidden">Sky-High Dinner</span></h4>
+                        <div class="ticket-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/20 Sat 17:45（<span class="zh">建議 17:00 上塔看日落</span><span class="en hidden">Recommended: 17:00 to go up and watch sunset</span>）</p>
+                            <p><span class="detail-label"><span class="zh">窗邊座位費</span><span class="en hidden">Window Seat Fee</span>:</span> US$54（Victoria <span class="zh">已付</span><span class="en hidden">paid</span>）</p>
+                        </div>
+                    </div>
+
+                    <!-- Ticket 3: Absinthe Show -->
+                    <div class="ticket-item">
+                        <h4>3. Absinthe Show – Caesars Palace</h4>
+                        <div class="ticket-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/20 Sat 7:00 PM</p>
+                            <p><span class="detail-label"><span class="zh">場地</span><span class="en hidden">Venue</span>:</span> Spiegeltent on the Roman Plaza, Caesars Palace</p>
+                            <p><span class="detail-label">Vegas.com <span class="zh">訂單</span><span class="en hidden">Order</span>:</span></p>
+                            <div class="confirmation-code">
+                                Order Confirmation: VC-00F2BM24<br>
+                                Section 1, Row F, Seat 32 & 33
+                            </div>
+                            <p><span class="detail-label"><span class="zh">金額</span><span class="en hidden">Amount</span>:</span> US$429.36（Show ticket total）<br>
+                            <span class="detail-label"><span class="zh">付款人</span><span class="en hidden">Paid by</span>:</span> Joy（Apple Pay）</p>
+                        </div>
+                    </div>
+
+                    <!-- Ticket 4: Antelope Canyon -->
+                    <div class="ticket-item">
+                        <h4>4. Upper Antelope Canyon X <span class="zh">門票 & 導覽之旅</span><span class="en hidden">Tickets & Guided Tour</span></h4>
+                        <div class="ticket-details">
+                            <p><span class="detail-label"><span class="zh">日期</span><span class="en hidden">Date</span>:</span> 12/26 Fri 11:10（<span class="zh">當地時間</span><span class="en hidden">local time</span>）</p>
+                            <p><span class="detail-label"><span class="zh">人數</span><span class="en hidden">Pax</span>:</span> 2 <span class="zh">位成人</span><span class="en hidden">adults</span></p>
+                            <p><span class="detail-label"><span class="zh">訂單金額</span><span class="en hidden">Order Amount</span>:</span> NT$ 4,698</p>
+                            <div class="confirmation-code">
+                                <span class="detail-label"><span class="zh">訂單編號</span><span class="en hidden">Order #</span>:</span> FHG855168（KLOOK，<span class="zh">狀態：訂單確認中</span><span class="en hidden">Status: Confirming</span>）
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ticket 5: Polar Express -->
+                    <div class="ticket-item">
+                        <h4>5. Grand Canyon Railway – Polar Express</h4>
+                        <div class="ticket-details">
+                            <p><span class="detail-label">Travel Date:</span> Saturday, December 27, 2025</p>
+                            <p><span class="detail-label">Boarding:</span> 7:15 PM MST | <span class="detail-label">Departure:</span> 7:30 PM MST | <span class="detail-label">Return:</span> 8:30 PM MST</p>
+                            <p><span class="detail-label"><span class="zh">行程</span><span class="en hidden">Route</span>:</span> Williams, AZ → "North Pole" → Williams</p>
+                            <p><span class="detail-label"><span class="zh">乘客</span><span class="en hidden">Passengers</span>:</span> 2 Adults</p>
+                            <p><span class="detail-label"><span class="zh">金額</span><span class="en hidden">Amount</span>:</span> US$161.16（Tickets 145.98 + Tax 15.18）</p>
+                            <div class="confirmation-code">
+                                <span class="detail-label">Itinerary / Reservation #:</span> 34391051
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="itinerary" class="section">
-            <h2>📍 <span class="zh">Day by Day 行程</span><span class="en hidden">Day by Day Itinerary</span></h2>
+            <h2>📍 <span class="zh">行程</span><span class="en hidden">Itinerary</span></h2>
 
             <div id="itinerary-list"></div>
         </div>
@@ -1042,81 +1515,81 @@
                 day: 1,
                 date: '12/19 (五)',
                 title: 'TPE → ONT → PHX',
-                details: ['20:30 - JX010 起飛 (TPE → ONT)', '15:50 - 抵達 Ontario', '20:02-22:23 - AA1666 (ONT → PHX)', '22:30+ - 與寶真會合，回 Phoenix'],
-                accommodation: '寶真家',
-                tasks: ['洗澡', '簡單超市採買', '調時差', '早點睡']
+                details: ['16:00 - 抵達桃園 T2 辦理報到、退稅', '20:30 - JX010 起飛 (TPE → ONT)', '15:50 - 抵達 ONT，入境、領行李', '20:02-22:23 - AA1666 (ONT → PHX)', '22:30 - 與 Joy 會合 → 回 Phoenix 住處'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: []
             },
             {
                 day: 2,
                 date: '12/20 (六)',
-                title: 'PHX → Las Vegas',
-                details: ['11:45 - Sadelle\'s Brunch (Cosmopolitan)', '14:30-16:00 - Bellagio 午休', '17:45 - Top of the World 晚餐 (Stratosphere)', '19:00 - Absinthe 秀 (Caesars Palace)'],
-                accommodation: 'Bellagio Hotel (NT$ 8,276.36)',
-                tasks: ['Vegas Boulevard 漫步', '拍夜景', '欣賞噴泉表演']
+                title: 'Phoenix → Las Vegas（吃吃喝喝＋秀）',
+                details: ['07:50 - 出門 → PHX 機場', '09:50-10:10 - Flight 4414 (PHX → LAS, Southwest)', '11:45 - Sadelle\'s Brunch (The Cosmopolitan)', 'Check-in Bellagio / Bellagio 溫室、噴泉、逛大道', '17:00 - 抵達 Stratosphere Tower', '17:45 - Top of the World 晚餐（看日落＋夜景）', '19:00 - Caesars Palace《Absinthe》', '看完可在 Strip 散步 → 回 Bellagio 休息'],
+                accommodation: 'Bellagio Hotel（NT$ 8,276.36）',
+                tasks: []
             },
             {
                 day: 3,
                 date: '12/21 (日)',
-                title: 'Las Vegas → PHX',
-                details: ['早上 - 飯店早餐', '10:30-12:00 - Bellagio 周邊拍照', '依機票時間返回 Phoenix'],
-                accommodation: '寶真家',
-                tasks: ['整理行李', '休息調整']
+                title: 'Vegas → Phoenix',
+                details: ['早上 - 飯店附近散步、拍照、Check-out', '15:30 前抵達 LAS 機場', '17:35-19:50 - Flight 2146 (LAS → PHX, Southwest)', '回 Phoenix 住 Joy 家，這天不排景點'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: []
             },
             {
                 day: 4,
                 date: '12/22 (一)',
-                title: 'Phoenix Chill Day',
-                details: ['Costco / Target / Outlets 採買', 'Desert Botanical Garden 或 Papago Park 看夕陽', '檢查車況（胎壓、雨刷水）', '準備保暖衣物、零食、急救用品'],
-                accommodation: '寶真家',
-                tasks: ['購物', '檢查裝備', '早睡準備出發']
+                title: 'Phoenix City Chill',
+                details: ['Costco / Target / Outlets 採買', 'Desert Botanical Garden / Papago Park 夕陽', '檢查車況：胎壓、雨刷水、煞車油'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: ['購物', '檢查裝備']
             },
             {
                 day: 5,
                 date: '12/23 (二)',
-                title: 'Phoenix 準備日',
-                details: ['補充採買清單 (REI/戶外店)', '整理 6 天 Road Trip 行李', '分類：隨身小包 + 大行李', '早睡為隔天出發做準備'],
-                accommodation: '寶真家',
-                tasks: ['行李檢查清單', '確認所有物品']
+                title: 'Road Trip 準備＋Phoenix → Flagstaff',
+                details: ['下班後約 18:30 從 TSMC 出發', '18:30-20:30 - 開車到 Flagstaff', 'Check-in：Hampton Inn & Suites Flagstaff'],
+                accommodation: 'Hampton Inn & Suites Flagstaff（12/23-25）',
+                tasks: ['車況檢查', '行李整理', '早睡準備出發']
             },
             {
                 day: 6,
-                date: '12/24 (三)',
-                title: 'PHX → Flagstaff',
-                details: ['18:30 - TSMC Arizona 出發', '18:30-20:30 - 開車約 2 小時', 'Check-in Hampton Inn Flagstaff', '附近超市補給'],
-                accommodation: 'Hampton Inn Flagstaff (USD 294.47)',
-                tasks: ['檢查車況', '早睡準備進 Grand Canyon']
+                date: '12/24 (二)',
+                title: 'Flagstaff & Grand Canyon 周邊',
+                details: ['可依天氣選擇：', '• Grand Canyon South Rim（Village 附近 & 幾個 view point）', '• 或 Sedona 半日遊（Uptown、紅岩）', '晚上回 Hampton Inn 休息'],
+                accommodation: 'Hampton Inn & Suites Flagstaff',
+                tasks: ['彈性行程', '視天氣調整']
             },
             {
                 day: 7,
-                date: '12/25 (四)',
-                title: 'Grand Canyon 西線',
-                details: ['08:00 - Hampton Inn 出發', '09:30-10:00 - Bright Angel Trailhead', '10:00+ - 園區 Shuttle (西線)', '13:30-16:00 - Hermit Trailhead 輕健行', '18:00-19:00 - Fat Olives 晚餐'],
-                accommodation: 'Hampton Inn Flagstaff',
-                tasks: ['步道拍照', '日落觀景', '準備相機']
+                date: '12/25 (三)',
+                title: 'Flagstaff → Page',
+                details: ['早上：Flagstaff 慢步或再補一點 Grand Canyon 東線', '下午：開車到 Page（約 2 小時）', 'Check-in：Country Inn & Suites, Page（12/25-27）', '晚上：Walmart 補給，Lake Powell 夕陽'],
+                accommodation: 'Country Inn & Suites by Radisson, Page, AZ（12/25-27）',
+                tasks: ['行車休息', '補給物資', '夕陽拍照']
             },
             {
                 day: 8,
-                date: '12/26 (五)',
-                title: 'Grand Canyon 東線 → Page',
-                details: ['09:30 - Flagstaff 出發', '09:30-10:50 - Drigo\'s Brunch', '多個停靠點：Mather Point, Yavapai, Desert View', '14:50-16:20 - 馬蹄灣 (1.5h 車程)', '16:20-17:30 - Horseshoe Bend 步道'],
-                accommodation: 'Country Inn & Suites, Page (USD 305.12)',
-                tasks: ['馬蹄灣日出/日落拍照', '湖景觀賞']
-            },
-            {
-                day: 9,
-                date: '12/27 (六)',
-                title: 'Page 羚羊峽谷',
-                details: ['10:00-10:15 - 飯店 → Antelope Canyon', '10:30-12:30 - 羚羊峽谷導覽 (2h)', '13:00-14:00 - Hanging Garden Trailhead', '14:15-14:45 - Wahweap Overlook (Lake Powell 俯瞰)', '15:00+ - 回飯店自由活動'],
-                accommodation: 'Country Inn & Suites, Page',
+                date: '12/26 (四)',
+                title: 'Antelope Canyon X ＋ Page',
+                details: ['10:20 - 抵達報到地點', '11:10-約 13:10 - 羚羊峽谷 X 導覽之旅（FHG855168, KLOOK）', '下午：Horseshoe Bend / Hanging Garden Trail / Wahweap Overlook', '晚上：回 Country Inn 休息'],
+                accommodation: 'Country Inn & Suites by Radisson, Page, AZ',
                 tasks: ['專業導遊陪同', '攝影機會多', '下午休息']
             },
             {
+                day: 9,
+                date: '12/27 (五)',
+                title: 'Page → Williams → Polar Express',
+                details: ['早上：Page 出發，開車前往 Williams（約 2.5 小時，可視情況加 Grand Canyon 短停留）', '下午：Williams 小鎮散步、早一點吃晚餐', '19:15 - Boarding', '19:30-20:30 - Polar Express 體驗', '之後：直接回飯店'],
+                accommodation: 'Days Inn by Wyndham Williams（12/27-28）',
+                tasks: ['火車體驗', '聖誕氛圍', '早睡']
+            },
+            {
                 day: 10,
-                date: '12/28 (日)',
-                title: 'Bearizona → Polar Express',
-                details: ['10:00 - Page 出發', '12:40-16:00 - Bearizona Wildlife Park (3.5h)', '16:00-16:10 - 前往 Williams Depot', '18:30-20:00 - Polar Express Train Ride'],
-                accommodation: 'Days Inn by Wyndham Williams (USD 174.98)',
-                tasks: ['自駕動物園', '欣賞聖誕氛圍火車']
+                date: '12/28 (六)',
+                title: 'Williams → Sedona → Phoenix',
+                details: ['早上退房，Williams → Sedona（約 1h10）', '中午在 Sedona 吃午餐、逛 Uptown＋Tlaquepaque', '下午：Sedona → Phoenix（約 2 小時）', '晚上回 Joy 家，結束北亞利桑那 Road Trip'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: ['藝術村逛街', '紅岩日落拍照', '完成 Road Trip']
             },
             {
                 day: 11,
@@ -1137,54 +1610,54 @@
             {
                 day: 13,
                 date: '12/31 (三)',
-                title: 'PHX 檢查日 & 跨年',
-                details: ['車況全面檢查：機油、輪胎、備胎、雨刷', 'AutoZone/O\'Reilly 購買雪鏈', '在平地試裝雪鏈一次', '準備 Yosemite 糧食', '視體力簡單吃跨年飯'],
-                accommodation: '寶真家',
-                tasks: ['車況檢查清單', '裝雪鏈演習', '跨年慶祝']
+                title: 'Phoenix → Palm Springs',
+                details: ['車況全面檢查：機油、輪胎、備胎、雨刷', 'AutoZone/O\'Reilly 購買雪鏈、試裝', '準備 Yosemite 糧食', '約 4.5 小時車程到 Palm Springs', 'Check-in 飯店'],
+                accommodation: 'Palm Springs 飯店',
+                tasks: ['車況檢查清單', '裝雪鏈演習', '早睡準備上山']
             },
             {
                 day: 14,
                 date: '01/01 (四)',
-                title: 'PHX → Palm Springs',
-                details: ['09:00-10:00 出發', '行車時間：約 4.5 小時', 'Check-in Palm Springs 飯店', '泳池放鬆 + 市區散步', 'Downtown 步行區 / Palm Canyon Drive'],
-                accommodation: 'Hilton/Renaissance/Courtyard Palm Springs',
-                tasks: ['放鬆身心', '享受溫暖天氣', '自由安排']
-            },
-            {
-                day: 15,
-                date: '01/02 (五)',
                 title: 'Palm Springs → Fresno',
-                details: ['09:00-10:00 出發', '中途停靠：Cabazon Dinosaurs (30min 拍照)', '可選：Desert Hills Premium Outlets (1-2h)', '傍晚抵達 Fresno', 'Check-in 後早睡，為上山準備'],
+                details: ['早上出發', '行車時間：約 5 小時', '中途可選：Outlets 逛街（1-2 小時）', '傍晚抵達 Fresno', 'Check-in 後早睡，為上山準備'],
                 accommodation: 'Fresno 飯店',
                 tasks: ['購物 / 拍照', '補充零食水', '早睡養精蓄銳']
             },
             {
-                day: 16,
-                date: '01/03 (六)',
+                day: 15,
+                date: '01/02 (五)',
                 title: 'Fresno → Yosemite Valley',
-                details: ['09:00-10:00 出發', '1.5-2h 車程抵達 Yosemite', 'Tunnel View - 必拍大景', 'Bridalveil Fall Trail - 短步道', 'Visitor Center + Village', 'El Capitan Meadow - 看攀岩者'],
+                details: ['早上出發', '行車時間：1.5–2 小時', 'Tunnel View - 必拍大景', 'Bridalveil Fall Trail - 短步道', 'Visitor Center + Village', 'Check-in 園外住宿（El Portal/Fish Camp/Oakhurst）'],
                 accommodation: 'El Portal/Fish Camp/Oakhurst 園外',
                 tasks: ['檢查雪鏈', '油量 1/2 以上', '熟悉山谷']
             },
             {
+                day: 16,
+                date: '01/03 (六)',
+                title: 'Yosemite Valley 冬季一日遊',
+                details: ['Lower Yosemite Fall Trail - 必走', 'Sentinel Bridge - 下午 Half Dome 倒影', 'Curry Village → Mirror Lake - 雪景散步', '若 Badger Pass 開放：可玩雪橇/雪鞋', '若封閉：多走短步道 + 拍雪景'],
+                accommodation: '同前（園外）',
+                tasks: ['查詢 NPS 路況', '備好雪鏈', '早睡準備長途']
+            },
+            {
                 day: 17,
                 date: '01/04 (日)',
-                title: 'Yosemite 深度遊',
-                details: ['Lower Yosemite Fall Trail - 必走', 'Sentinel Bridge - 下午 Half Dome 倒影', 'Curry Village → Mirror Lake - 雪景散步', '若 Badger Pass 開放：可玩雪橇/雪鞋', '若封閉：多走短步道 + 拍雪景'],
-                accommodation: '同前',
-                tasks: ['查詢 NPS 路況', '備好雪鏈', '早睡準備長途']
+                title: 'Yosemite → Phoenix（拆成 Bakersfield＋Phoenix 兩段）',
+                details: ['08:00 - 住宿地出發下山', '08:00-12:30 - Yosemite → Bakersfield（4.5 小時）', '12:30-14:00 - Bakersfield 午餐 + 加油 + 休息', '14:00-20:00 - Bakersfield → Phoenix（6 小時）', '每 2-2.5h 停一次休息', '約 20:00-21:00 抵達 PHX'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: ['分段行車較安全', '充分休息', '準備隔日回台']
             },
             {
                 day: 18,
                 date: '01/05 (一)',
-                title: 'Yosemite → PHX',
-                details: ['08:00 - 住宿地出發下山', '08:00-12:30 - Yosemite → Bakersfield (4.5h)', '12:30-14:00 - Bakersfield 午餐 + 加油 + 休息', '14:00-20:00 - Bakersfield → Phoenix (6h)', '每 2-2.5h 停一次休息', '約 20:00-21:00 抵達 PHX'],
-                accommodation: '寶真家',
-                tasks: ['洗澡', '簡單收拾', '準備隔日回台']
+                title: 'Phoenix 休息 & 回程準備',
+                details: ['洗澡、整理行李', '洗衣、整理照片、備份記憶卡', '簡單收拾、補充零食', '早睡為明日長途飛行做準備'],
+                accommodation: 'Phoenix（Joy 家）',
+                tasks: ['全身放空', '整理記憶卡', '早睡充電']
             },
             {
                 day: 19,
-                date: '01/05 (一)',
+                date: '01/06 (二)',
                 title: 'PHX → TPE',
                 details: ['早上 - 最後行李收拾', '確認護照、機票、現金', '12:00-13:00 - 簡單午餐 + 道別', '15:00 - 出發前往 PHX 機場', '17:50-18:07 - AA1666 (PHX → ONT)', '21:45-01/07 04:30 - JX009 (ONT → TPE)'],
                 accommodation: '回台灣',
